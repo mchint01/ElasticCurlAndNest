@@ -25,12 +25,24 @@ namespace ElasticCurl
 
             var client = connector.GetClient();
 
-            var results = connector.GetSuggestions(client, new Models.SuggestionRequest {Query = query }).Result;
-
-            foreach (var r in results)
+            var response = connector.GetSuggestions(client, new Models.SuggestionRequest
             {
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(r));
+                Query = query,
+                PageSize = 10,
+                MinScore = 0.5
+            }).Result;
+
+            foreach (var groups in response.Results.GroupBy(x=>x.ValueType))
+            {
+                foreach (var data in groups.OrderByDescending(x=>x.Score))
+                {
+                    Console.WriteLine(data.ValueType + "   " + data.Value + "   " + data.Score);
+                }
+
+                Console.WriteLine();
             }
+
+            Console.WriteLine("Time taken to search Mill Seconds {0}", TimeSpan.FromTicks(response.Ticks).Milliseconds);
 
             Console.ReadLine();
         }

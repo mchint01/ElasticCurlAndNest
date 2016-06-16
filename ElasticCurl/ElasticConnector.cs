@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using ElasticCurl.Models;
 using Elasticsearch.Net;
@@ -58,12 +60,46 @@ namespace ElasticCurl
         }
 
 
-        public async Task<IEnumerable<TsSuggestion>> GetSuggestions(IElasticClient client, SuggestionRequest request)
+        public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SuggestionRequest request)
         {
-            var response = await client.SearchAsync<TsSuggestion>(s => s
-                .Query(query => query.Term(x => x.Value, request.Query)));
+            // start watch
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            return response.Documents;
+            // query string
+            var queryString = request.Query.ToLower().Trim();
+
+            var suggestions = await client.SearchAsync<TsSuggestion>(x => x
+                .Size(request.PageSize)
+                .From(request.PageSize*request.CurrentPage)
+                .MinScore(request.MinScore)
+                .Highlight(hd => hd
+                    .PreTags("<b>")
+                    .PostTags("</b>")
+                    .Fields(fields => fields.Field("*")))
+                .Query(query =>
+                    query.Match(m1 => m1.Field(f1 => f1.Value).Query(queryString).Analyzer("suggestionAnalyzer")))
+                .Sort(s => s.Descending("_score")));
+
+            var response = new List<TsSuggestion>();
+
+            foreach (var hit in suggestions.Hits)
+            {
+                var newSuggestion = hit.Source;
+                newSuggestion.Score = hit.Score;
+
+                response.Add(newSuggestion);
+            }
+
+            stopwatch.Stop();
+
+            return new SearchResults<TsSuggestion>()
+            {
+                Results = response,
+                Count = suggestions.Total,
+                Query = suggestions.CallDetails.RequestBodyInBytes != null ? Encoding.UTF8.GetString(suggestions.CallDetails.RequestBodyInBytes) : null,
+                Ticks = stopwatch.ElapsedTicks
+            };
         }
 
         private void CreateIndexIfNotExists(IElasticClient client)
@@ -107,8 +143,8 @@ namespace ElasticCurl
         {
             var suggestionAnalyzer = new CustomAnalyzer
             {
-                Filter = new List<string> { "lowercase", "standard", "asciifolding" },
-                Tokenizer = "allEdgeNGramTokenizer"
+                Filter = new List<string> { "lowercase", "edgeNGram" },
+                Tokenizer = "standard"
             };
 
             var requestAnalysis = new Analysis
@@ -120,7 +156,7 @@ namespace ElasticCurl
                 Tokenizers = new Tokenizers
                 {
                     {
-                        "allEdgeNGramTokenizer", new EdgeNGramTokenizer
+                        "edgeNGramTokenizer", new EdgeNGramTokenizer
                         {
                             MinGram = 1,
                             MaxGram = 12,
@@ -129,10 +165,26 @@ namespace ElasticCurl
                                 {
                                     TokenChar.Digit,
                                     TokenChar.Letter,
-                                    TokenChar.Punctuation,
-                                    TokenChar.Symbol,
                                     TokenChar.Whitespace
                                 }
+                        }
+                    }
+                },
+                TokenFilters = new TokenFilters
+                {
+                    {
+                        "nGram", new NGramTokenFilter
+                        {
+                            MinGram = 1,
+                            MaxGram = 15
+                        }
+                    },
+
+                    {
+                        "edgeNGram", new EdgeNGramTokenFilter
+                        {
+                            MinGram = 1,
+                            MaxGram = 15
                         }
                     }
                 }

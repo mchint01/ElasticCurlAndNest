@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElasticConnector.cs" />
+    <Compile Include="Models\SearchResults.cs" />
     <Compile Include="Models\SuggestionRequest.cs" />
     <Compile Include="Models\TsSuggestion.cs" />
     <Compile Include="Program.cs" />

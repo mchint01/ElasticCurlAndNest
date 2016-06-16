@@ -10,7 +10,8 @@ namespace ElasticCurl.Models
         public string Id { get; set; }
 
         [String(Name = "value",
-            Index = FieldIndexOption.Analyzed)]
+            Index = FieldIndexOption.Analyzed,
+            Analyzer = "suggestionAnalyzer")]
         public string Value { get; set; }
 
         [String(Name = "valueType",
@@ -24,5 +25,7 @@ namespace ElasticCurl.Models
         [String(Name = "afmcCode",
             Index = FieldIndexOption.NotAnalyzed)]
         public string AfmcCode { get; set; }
+
+        public double Score { get; set; }
     }
 }
