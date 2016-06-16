@@ -1,0 +1,16 @@
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\ElasticCurl.exe.config
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\ElasticCurl.exe
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\ElasticCurl.pdb
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Newtonsoft.Json.dll
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\System.Net.Http.Formatting.dll
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Newtonsoft.Json.xml
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\System.Net.Http.Formatting.xml
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\obj\Debug\ElasticCurl.csprojResolveAssemblyReference.cache
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\obj\Debug\ElasticCurl.exe
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\obj\Debug\ElasticCurl.pdb
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Elasticsearch.Net.dll
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Nest.dll
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Elasticsearch.Net.pdb
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Elasticsearch.Net.xml
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Nest.pdb
+d:\users\mchinta\documents\visual studio 2015\Projects\ElasticCurl\ElasticCurl\bin\Debug\Nest.xml
