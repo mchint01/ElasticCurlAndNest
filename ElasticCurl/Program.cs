@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Nest;
 
 namespace ElasticCurl
 {
@@ -17,9 +18,21 @@ namespace ElasticCurl
             //    CreateIndex("customer").Wait();
             //}
 
+            Console.WriteLine("What to search for?");
+            var query = Console.ReadLine();
+
             var connector = new ElasticConnector();
 
             var client = connector.GetClient();
+
+            var results = connector.GetSuggestions(client, new Models.SuggestionRequest {Query = query }).Result;
+
+            foreach (var r in results)
+            {
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(r));
+            }
+
+            Console.ReadLine();
         }
 
         private static async Task<bool> CheckIfIndexExists(string indexName)

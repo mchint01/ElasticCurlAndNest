@@ -57,6 +57,15 @@ namespace ElasticCurl
             client.Optimize(SuggestionIndexName);
         }
 
+
+        public async Task<IEnumerable<TsSuggestion>> GetSuggestions(IElasticClient client, SuggestionRequest request)
+        {
+            var response = await client.SearchAsync<TsSuggestion>(s => s
+                .Query(query => query.Term(x => x.Value, request.Query)));
+
+            return response.Documents;
+        }
+
         private void CreateIndexIfNotExists(IElasticClient client)
         {
             var searchIndexExists = client.IndexExists(SearchIndexName);
