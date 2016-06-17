@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticCurl", "ElasticCurl\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticIndexer", "ElasticIndexer\ElasticIndexer.csproj", "{EDB53953-AE22-4091-BAAE-2A09D4E94109}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsIndexer", "TsIndexer\TsIndexer.csproj", "{4A54B2A8-13E5-46F3-B500-70F318C1F889}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EDB53953-AE22-4091-BAAE-2A09D4E94109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDB53953-AE22-4091-BAAE-2A09D4E94109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDB53953-AE22-4091-BAAE-2A09D4E94109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A54B2A8-13E5-46F3-B500-70F318C1F889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A54B2A8-13E5-46F3-B500-70F318C1F889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A54B2A8-13E5-46F3-B500-70F318C1F889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A54B2A8-13E5-46F3-B500-70F318C1F889}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
