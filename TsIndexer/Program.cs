@@ -80,12 +80,13 @@ namespace TsIndexer
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
 
-            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-10);
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-20).ToEpoch();
+
+            //build up the query string
+            var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);
 
             //Get all the updated suggestions in last 10 mins
-            var documents = _documentClient.CreateDocumentQuery(collectionLink)
-                .Where(x => x.Timestamp >= timeToGoBackFrom)
-                .AsEnumerable()
+            var documents = _documentClient.CreateDocumentQuery(collectionLink, sql)
                 .ToList();
 
             foreach (var d in documents)
