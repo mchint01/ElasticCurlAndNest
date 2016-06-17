@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace ElasticCurl.Models
 {
-    [ElasticsearchType(IdProperty = "Id", Name = "ts_suggestion")]
+    [ElasticsearchType(IdProperty = "id", Name = "ts_suggestion")]
     public class TsSuggestion
     {
-        [String(Index = FieldIndexOption.NotAnalyzed)]
+        [String(Index = FieldIndexOption.NotAnalyzed,Name = "id")]
         public string Id { get; set; }
 
         [String(Name = "value",

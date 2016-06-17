@@ -38,6 +38,8 @@ namespace ElasticCurl
             return client;
         }
 
+        #region Suggestion Public Members
+
         public void IndexSuggestionDocument(IElasticClient client, TsSuggestion model)
         {
             var response = client.Index(model, idx => idx.Index(SuggestionIndexName));
@@ -52,14 +54,13 @@ namespace ElasticCurl
         {
             client.DeleteIndex(SuggestionIndexName);
 
-            CreateSuggestionsIndexIfNotExists(client);
+            CreateSuggestionsIndex(client);
         }
 
         public void OptimizeSuggestionIndex(IElasticClient client)
         {
             client.Optimize(SuggestionIndexName);
         }
-
 
         public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SuggestionRequest request)
         {
@@ -103,6 +104,36 @@ namespace ElasticCurl
             };
         }
 
+        #endregion
+
+        #region Template Search Public Members
+
+        public void IndexTemplateDocument(IElasticClient client, TsTemplate model)
+        {
+            var response = client.Index(model, idx => idx.Index(SearchIndexName));
+
+            if (!response.IsValid)
+            {
+                throw new Exception("Could not index document to elastic", response.OriginalException);
+            }
+        }
+
+        public void DeleteTemplateIndexAndReCreate(IElasticClient client)
+        {
+            client.DeleteIndex(SearchIndexName);
+
+            CreateTemplateIndex(client);
+        }
+
+        public void OptimizeTemplateIndex(IElasticClient client)
+        {
+            client.Optimize(SearchIndexName);
+        }
+
+        #endregion
+
+        #region Private Members
+
         private void CreateIndexIfNotExists(IElasticClient client)
         {
             var searchIndexExists = client.IndexExists(SearchIndexName);
@@ -114,7 +145,7 @@ namespace ElasticCurl
 
             if (!searchIndexExists.Exists)
             {
-                var searchIndexCreateResponse = client.CreateIndex(SearchIndexName);
+                var searchIndexCreateResponse = CreateTemplateIndex(client);
 
                 if (!searchIndexCreateResponse.IsValid)
                 {
@@ -131,7 +162,7 @@ namespace ElasticCurl
 
             if (!suggestionIndexExists.Exists)
             {
-                var suggestionIndexCreateResponse = CreateSuggestionsIndexIfNotExists(client);
+                var suggestionIndexCreateResponse = CreateSuggestionsIndex(client);
 
                 if (!suggestionIndexCreateResponse.IsValid)
                 {
@@ -140,7 +171,7 @@ namespace ElasticCurl
             }
         }
 
-        private ICreateIndexResponse CreateSuggestionsIndexIfNotExists(IElasticClient client)
+        private ICreateIndexResponse CreateSuggestionsIndex(IElasticClient client)
         {
             var suggestionAnalyzer = new CustomAnalyzer
             {
@@ -197,5 +228,67 @@ namespace ElasticCurl
 
             return client.CreateIndex(indexDescriptor);
         }
+
+        private ICreateIndexResponse CreateTemplateIndex(IElasticClient client)
+        {
+            var suggestionAnalyzer = new CustomAnalyzer
+            {
+                Filter = new List<string> { "lowercase", "edgeNGram" },
+                Tokenizer = "standard"
+            };
+
+            var requestAnalysis = new Analysis
+            {
+                Analyzers = new Analyzers
+                {
+                    {"suggestionAnalyzer", suggestionAnalyzer}
+                },
+                Tokenizers = new Tokenizers
+                {
+                    {
+                        "edgeNGramTokenizer", new EdgeNGramTokenizer
+                        {
+                            MinGram = 1,
+                            MaxGram = 12,
+                            TokenChars =
+                                new List<TokenChar>
+                                {
+                                    TokenChar.Digit,
+                                    TokenChar.Letter,
+                                    TokenChar.Whitespace,
+                                    TokenChar.Symbol,
+                                    TokenChar.Punctuation
+                                }
+                        }
+                    }
+                },
+                TokenFilters = new TokenFilters
+                {
+                    {
+                        "nGram", new NGramTokenFilter
+                        {
+                            MinGram = 1,
+                            MaxGram = 15
+                        }
+                    },
+
+                    {
+                        "edgeNGram", new EdgeNGramTokenFilter
+                        {
+                            MinGram = 1,
+                            MaxGram = 15
+                        }
+                    }
+                }
+            };
+
+            var indexDescriptor = new CreateIndexDescriptor(SearchIndexName)
+                .Mappings(x => x.Map<TsTemplate>(m => m.AutoMap()))
+                .Settings(x => x.Analysis(m => requestAnalysis));
+
+            return client.CreateIndex(indexDescriptor);
+        }
+
+        #endregion
     }
 }
