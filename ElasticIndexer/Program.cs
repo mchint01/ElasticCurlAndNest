@@ -13,16 +13,17 @@ namespace ElasticIndexer
 {
     public class Program
     {
-        private static readonly string EndpointUrl = ConfigurationManager.AppSettings["EndPointUrl"];
+        private static readonly string DocumentDbEndpointUrl = ConfigurationManager.AppSettings["DocumentDbEndpointUrl"];
         private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
         private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
         private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
+        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
 
         private static DocumentClient _documentClient;
 
         static void Main(string[] args)
         {
-            using (_documentClient = new DocumentClient(new Uri(EndpointUrl), AuthorizationKey))
+            using (_documentClient = new DocumentClient(new Uri(DocumentDbEndpointUrl), AuthorizationKey))
             {
                 //ensure the database & collection exist before running samples
                 Init();
