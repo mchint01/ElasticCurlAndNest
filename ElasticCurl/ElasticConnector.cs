@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace ElasticCurl
     {
         private const string SearchIndexName = "ts-search-index";
         private const string SuggestionIndexName = "ts-suggestion-index";
-        private const string ClusterUri = "http://113121f8664ccf8c8a10dccd10132cd7.us-east-1.aws.found.io:9200/";
+        private static readonly string ClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
 
         public ElasticClient GetClient()
         {
