@@ -27,6 +27,8 @@ namespace TsElasticCommon
 
             var settings = new ConnectionSettings(pool);
 
+            settings.BasicAuthentication("tsAdmin", "jxa70nbxhi1l19j3ju");
+
             settings.MapDefaultTypeIndices(x =>
             {
                 x.Add(typeof(TsSuggestion), SuggestionIndexName);
