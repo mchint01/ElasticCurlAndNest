@@ -15,6 +15,7 @@ namespace TsElasticIndexer
         private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
         private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
         private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
+        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
 
         private static DocumentClient _documentClient;
         static void Main(string[] args)
@@ -25,7 +26,8 @@ namespace TsElasticIndexer
                 Init();
 
                 //get all suggestions changed in last 10 mins and update them
-                UpdateIndex(DatabaseId, SuggestionCollectionId);
+                UpdateSuggestionIndex(DatabaseId, SuggestionCollectionId);
+                UpdateTemplateIndex(DatabaseId, TemplateCollectionId);
             }
         }
 
@@ -35,7 +37,6 @@ namespace TsElasticIndexer
 
             GetCollection(DatabaseId, SuggestionCollectionId);
         }
-
 
         private static Database GetDatabase(string databaseId)
         {
@@ -69,7 +70,7 @@ namespace TsElasticIndexer
             return collection;
         }
 
-        private static void UpdateIndex(string databaseId, string collectionId)
+        private static void UpdateSuggestionIndex(string databaseId, string collectionId)
         {
             var elasticConnector = new ElasticConnector();
 
@@ -97,6 +98,11 @@ namespace TsElasticIndexer
 
             // optimize the suggestion index
             elasticConnector.OptimizeSuggestionIndex(elasticClient);
+        }
+
+        private static void UpdateTemplateIndex(string databaseId, string collectionId)
+        {
+
         }
     }
 }
