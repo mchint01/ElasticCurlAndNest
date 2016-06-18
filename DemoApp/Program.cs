@@ -57,8 +57,9 @@ namespace ElasticCurl
                 var response = connector.GetTemplates(client, new TsSearchRequest
                 {
                     Query = query,
-                    PageSize = 20,
-                    MinScore = 0.1
+                    PageSize = 15,
+                    MinScore = 0.1,
+                    CurrentPage = 1
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
