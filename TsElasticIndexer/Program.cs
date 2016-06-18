@@ -80,8 +80,8 @@ namespace TsElasticIndexer
 
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-
-            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-20).ToEpoch();
+            var LastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
 
             //build up the query string
             var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);
@@ -107,8 +107,8 @@ namespace TsElasticIndexer
 
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-
-            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-20).ToEpoch();
+            var LastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
 
             //build up the query string
             var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);
