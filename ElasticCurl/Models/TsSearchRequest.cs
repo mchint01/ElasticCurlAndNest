@@ -1,6 +1,6 @@
 namespace ElasticCurl.Models
 {
-    public class SuggestionRequest
+    public class TsSearchRequest
     {
         public int PageSize { get; set; }
 

@@ -27,9 +27,11 @@ namespace ElasticCurl
 
             var settings = new ConnectionSettings(pool);
 
-
-            settings.MapDefaultTypeIndices(
-                x => x.Add(typeof(TsSuggestion), SuggestionIndexName));
+            settings.MapDefaultTypeIndices(x =>
+            {
+                x.Add(typeof(TsSuggestion), SuggestionIndexName);
+                x.Add(typeof(TsTemplate), SearchIndexName);
+            });
 
             var client = new ElasticClient(settings);
 
@@ -62,7 +64,7 @@ namespace ElasticCurl
             client.Optimize(SuggestionIndexName);
         }
 
-        public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SuggestionRequest request)
+        public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, TsSearchRequest request)
         {
             // start watch
             var stopwatch = new Stopwatch();
@@ -128,6 +130,11 @@ namespace ElasticCurl
         public void OptimizeTemplateIndex(IElasticClient client)
         {
             client.Optimize(SearchIndexName);
+        }
+
+        public async Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, TsSearchRequest request)
+        {
+            return null;
         }
 
         #endregion

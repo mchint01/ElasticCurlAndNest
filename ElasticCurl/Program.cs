@@ -21,7 +21,7 @@ namespace ElasticCurl
 
             var client = connector.GetClient();
 
-            var response = connector.GetSuggestions(client, new Models.SuggestionRequest
+            var response = connector.GetSuggestions(client, new Models.TsSearchRequest
             {
                 Query = query,
                 PageSize = 10,
