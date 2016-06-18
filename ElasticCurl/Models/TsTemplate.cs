@@ -56,14 +56,15 @@ namespace ElasticCurl.Models
             Index = FieldIndexOption.NotAnalyzed)]
         public string AfmcCode { get; set; }
 
-
-        [Nested(Name = "tmplTags",
-            IncludeInParent = true)]
+        [String(Name = "tmplTags",
+            Index = FieldIndexOption.Analyzed,
+            Analyzer = "suggestionAnalyzer")]
         public List<string> TmplTags { get; set; }
 
 
-        [Nested(Name = "tmplTypes",
-            IncludeInParent = true)]
+        [String(Name = "tmplTypes",
+         Index = FieldIndexOption.Analyzed,
+         Analyzer = "suggestionAnalyzer")]
         public List<string> TmplTypes { get; set; }
 
 
