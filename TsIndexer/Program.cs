@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ElasticCurl.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 
-namespace TsIndexer
+namespace TsElasticIndexer
 {
     public class Program
     {
