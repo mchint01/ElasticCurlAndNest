@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Nest;
+using Newtonsoft.Json;
 using TsElasticCommon;
 using TsElasticCommon.Models;
 
@@ -32,9 +33,11 @@ namespace ElasticCurl
                 var response = connector.GetSuggestions(client, new TsSearchRequest
                 {
                     Query = query,
-                    PageSize = 10,
+                    PageSize = 20,
                     MinScore = 0.5
                 }).Result;
+
+                Console.WriteLine("Total records {0}", response.Count);
 
                 foreach (var groups in response.Results.GroupBy(x => x.ValueType))
                 {
@@ -54,13 +57,26 @@ namespace ElasticCurl
                 var response = connector.GetTemplates(client, new TsSearchRequest
                 {
                     Query = query,
-                    PageSize = 10,
-                    MinScore = 0.5
+                    PageSize = 20,
+                    MinScore = 0.1
                 }).Result;
+
+                Console.WriteLine("Total records {0}", response.Count);
 
                 foreach (var data in response.Results.OrderByDescending(x=>x.Score))
                 {
-                    Console.WriteLine(data);
+                    Console.WriteLine("Title    {0}", data.Title);
+                    Console.WriteLine("Desc     {0}", data.Desc);
+                    Console.WriteLine("Authr    {0}", data.By);
+                    Console.WriteLine("TmplCode {0}", data.TmplCode);
+                    Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
+                    Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
+                    Console.WriteLine("InsAuthr {0}", data.InsAuthor);
+                    Console.WriteLine("Score    {0}", data.Score);
+                    Console.WriteLine("Featured {0}", data.IsFeatured);
+                    Console.WriteLine("Deleted  {0}", data.Deleted);
+
+                    //Console.WriteLine(JsonConvert.SerializeObject(data));
                     Console.WriteLine();
                 }
 
