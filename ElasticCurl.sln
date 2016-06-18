@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticCurl", "ElasticCurl\ElasticCurl.csproj", "{8B32389F-0887-47FE-8D85-8988231C62D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "ElasticCurl\DemoApp.csproj", "{8B32389F-0887-47FE-8D85-8988231C62D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticSeeder", "TsElasticSeeder\TsElasticSeeder.csproj", "{EDB53953-AE22-4091-BAAE-2A09D4E94109}"
 EndProject

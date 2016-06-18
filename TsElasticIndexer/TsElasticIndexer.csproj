@@ -71,9 +71,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ElasticCurl\ElasticCurl.csproj">
+    <ProjectReference Include="..\ElasticCurl\DemoApp.csproj">
       <Project>{8b32389f-0887-47fe-8d85-8988231c62d0}</Project>
-      <Name>ElasticCurl</Name>
+      <Name>DemoApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
