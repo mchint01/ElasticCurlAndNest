@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ElasticCurl.Models
+namespace TsElasticCommon.Models
 {
     public class SearchResults<T>
     {

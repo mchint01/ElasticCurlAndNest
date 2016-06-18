@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace ElasticCurl.Models
+namespace TsElasticCommon.Converter
 {
     public class BoolConverter : JsonConverter
     {

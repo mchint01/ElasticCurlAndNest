@@ -2,10 +2,11 @@
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using ElasticCurl.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using TsElasticCommon;
+using TsElasticCommon.Models;
 
 namespace TsElasticSeeder
 {
@@ -118,7 +119,7 @@ namespace TsElasticSeeder
 
         private static async Task GetAllSuggestionsFromCollectionAndSeedToElastic(string databaseId, string collectionId)
         {
-            var elasticConnector = new ElasticCurl.ElasticConnector();
+            var elasticConnector = new ElasticConnector();
 
             var elasticClient = elasticConnector.GetClient();
 
@@ -161,7 +162,7 @@ namespace TsElasticSeeder
 
         private static async Task GetAllTemplatesFromCollectionAndSeedToElastic(string databaseId, string collectionId)
         {
-            var elasticConnector = new ElasticCurl.ElasticConnector();
+            var elasticConnector = new ElasticConnector();
 
             var elasticClient = elasticConnector.GetClient();
 

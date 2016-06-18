@@ -1,4 +1,4 @@
-namespace ElasticCurl.Models
+namespace TsElasticCommon.Models
 {
     public class TsSearchRequest
     {

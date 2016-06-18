@@ -1,7 +1,6 @@
 ﻿using Nest;
-using Newtonsoft.Json;
 
-namespace ElasticCurl.Models
+namespace TsElasticCommon.Models
 {
     [ElasticsearchType(IdProperty = "id", Name = "ts_suggestion")]
     public class TsSuggestion

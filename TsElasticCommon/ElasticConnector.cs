@@ -4,11 +4,11 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using ElasticCurl.Models;
 using Elasticsearch.Net;
 using Nest;
+using TsElasticCommon.Models;
 
-namespace ElasticCurl
+namespace TsElasticCommon
 {
     public class ElasticConnector
     {

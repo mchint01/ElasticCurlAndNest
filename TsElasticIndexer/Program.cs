@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
-using ElasticCurl.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using TsElasticCommon;
+using TsElasticCommon.Models;
 
 namespace TsElasticIndexer
 {
@@ -70,7 +71,7 @@ namespace TsElasticIndexer
 
         private static void UpdateIndex(string databaseId, string collectionId)
         {
-            var elasticConnector = new ElasticCurl.ElasticConnector();
+            var elasticConnector = new ElasticConnector();
 
             var elasticClient = elasticConnector.GetClient();
 

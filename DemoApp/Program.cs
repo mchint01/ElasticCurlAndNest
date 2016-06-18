@@ -6,6 +6,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Nest;
+using TsElasticCommon;
+using TsElasticCommon.Models;
 
 namespace ElasticCurl
 {
@@ -21,7 +23,7 @@ namespace ElasticCurl
 
             var client = connector.GetClient();
 
-            var response = connector.GetSuggestions(client, new Models.TsSearchRequest
+            var response = connector.GetSuggestions(client, new TsSearchRequest
             {
                 Query = query,
                 PageSize = 10,
