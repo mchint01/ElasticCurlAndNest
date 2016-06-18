@@ -134,7 +134,74 @@ namespace TsElasticCommon
 
         public async Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, TsSearchRequest request)
         {
-            return null;
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            var templates = await client.SearchAsync<TsTemplate>(x =>
+            {
+                x.Size(request.PageSize)
+                    .From(request.PageSize*request.CurrentPage)
+                    .MinScore(request.MinScore)
+                    .Highlight(hd => hd
+                        .PreTags("<b>")
+                        .PostTags("</b>")
+                        .Fields(fields => fields.Field("*")));
+
+                var baseQuery = Query<TsTemplate>.MatchAll();
+
+                if (!string.IsNullOrEmpty(request.Query))
+                {
+                    var queryString = request.Query.ToLower().Trim();
+
+                    baseQuery =
+                        Query<TsTemplate>.Match(
+                            m1 => m1.Field(f1 => f1.Title).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.Desc).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m3 => m3.Field(f3 => f3.By).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.SchlDist).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.TmplTags).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.TmplTypes).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.InsAuthor).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m2 => m2.Field(f2 => f2.TmplCode).Query(queryString).Analyzer("suggestionAnalyzer"));
+                }
+
+                x.Query(q => baseQuery);
+
+                x.Sort(s => s.Descending("_score"));
+
+                return x;
+            });
+
+            var response = new List<TsTemplate>();
+
+            foreach (var hit in templates.Hits)
+            {
+                var newTemplate = hit.Source;
+                newTemplate.Score = hit.Score;
+
+                response.Add(newTemplate);
+            }
+
+            stopwatch.Stop();
+
+            return new SearchResults<TsTemplate>()
+            {
+                Results = response,
+                Count = templates.Total,
+                Query =
+                    templates.CallDetails.RequestBodyInBytes != null
+                        ? Encoding.UTF8.GetString(templates.CallDetails.RequestBodyInBytes)
+                        : null,
+                Ticks = stopwatch.ElapsedTicks
+            };
         }
 
         #endregion
