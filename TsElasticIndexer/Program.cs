@@ -27,6 +27,8 @@ namespace TsElasticIndexer
 
                 //get all suggestions changed in last 10 mins and update them
                 UpdateSuggestionIndex(DatabaseId, SuggestionCollectionId);
+
+                //get all templates changed in last x mins and update them
                 UpdateTemplateIndex(DatabaseId, TemplateCollectionId);
             }
         }
@@ -95,14 +97,33 @@ namespace TsElasticIndexer
                 //Updating the suggestion index
                 elasticConnector.IndexSuggestionDocument(elasticClient, suggestion);
             }
-
-            // optimize the suggestion index
-            elasticConnector.OptimizeSuggestionIndex(elasticClient);
         }
 
         private static void UpdateTemplateIndex(string databaseId, string collectionId)
         {
+            var elasticConnector = new ElasticConnector();
 
+            var elasticClient = elasticConnector.GetClient();
+
+            // form documentDb collection uri
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
+
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-20).ToEpoch();
+
+            //build up the query string
+            var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);
+
+            //Get all the updated templates in last 10 mins
+            var documents = _documentClient.CreateDocumentQuery(collectionLink, sql)
+                .ToList();
+
+            foreach (var d in documents)
+            {
+                var template = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
+
+                //Updating the templates index
+                elasticConnector.IndexTemplateDocument(elasticClient, template);
+            }
         }
     }
 }
