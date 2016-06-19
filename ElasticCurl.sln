@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticIndexer", "TsElast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.csproj", "{8B32389F-0887-47FE-8D85-8988231C62D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticCommon", "TsElasticCommon\ElasticCommon.csproj", "{F79A6941-EE96-41FF-8A48-1CE3898E1F41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticCommon", "ElasticCommon\ElasticCommon.csproj", "{F79A6941-EE96-41FF-8A48-1CE3898E1F41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
