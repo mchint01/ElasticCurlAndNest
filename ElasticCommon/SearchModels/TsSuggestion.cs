@@ -1,6 +1,6 @@
 ﻿using Nest;
 
-namespace ElasticCommon.Models
+namespace ElasticCommon.SearchModels
 {
     [ElasticsearchType(IdProperty = "id", Name = "ts_suggestion")]
     public class TsSuggestion

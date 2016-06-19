@@ -60,9 +60,9 @@
     <Compile Include="ElasticConnector.cs" />
     <Compile Include="IElasticConnector.cs" />
     <Compile Include="Models\SearchResults.cs" />
-    <Compile Include="Models\TsSearchRequest.cs" />
-    <Compile Include="Models\TsSuggestion.cs" />
-    <Compile Include="Models\TsTemplate.cs" />
+    <Compile Include="Models\SearchRequest.cs" />
+    <Compile Include="SearchModels\TsSuggestion.cs" />
+    <Compile Include="SearchModels\TsTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

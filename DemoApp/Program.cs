@@ -9,6 +9,7 @@ using ElasticCommon;
 using ElasticCommon.Models;
 using Nest;
 using Newtonsoft.Json;
+using SearchRequest = ElasticCommon.Models.SearchRequest;
 
 namespace ElasticCurl
 {
@@ -30,7 +31,7 @@ namespace ElasticCurl
 
             if (string.Equals("S", searchFor, StringComparison.OrdinalIgnoreCase))
             {
-                var response = connector.GetSuggestions(client, new TsSearchRequest
+                var response = connector.GetSuggestions(client, new SearchRequest
                 {
                     Query = query,
                     PageSize = 20,
@@ -54,7 +55,7 @@ namespace ElasticCurl
 
             if (string.Equals("T", searchFor, StringComparison.OrdinalIgnoreCase))
             {
-                var response = connector.GetTemplates(client, new TsSearchRequest
+                var response = connector.GetTemplates(client, new SearchRequest
                 {
                     Query = query,
                     PageSize = 15,

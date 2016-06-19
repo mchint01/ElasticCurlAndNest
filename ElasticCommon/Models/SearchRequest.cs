@@ -1,6 +1,6 @@
 namespace ElasticCommon.Models
 {
-    public class TsSearchRequest
+    public class SearchRequest
     {
         public int PageSize { get; set; }
 

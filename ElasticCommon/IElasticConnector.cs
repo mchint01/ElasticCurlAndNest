@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using ElasticCommon.Models;
+using ElasticCommon.SearchModels;
 using Nest;
+using SearchRequest = ElasticCommon.Models.SearchRequest;
 
 namespace ElasticCommon
 {
@@ -14,7 +16,7 @@ namespace ElasticCommon
 
         void OptimizeSuggestionIndex(IElasticClient client);
 
-        Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, TsSearchRequest request);
+        Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SearchRequest request);
 
         void IndexTemplateDocument(IElasticClient client, TsTemplate model);
 
@@ -22,6 +24,6 @@ namespace ElasticCommon
 
         void OptimizeTemplateIndex(IElasticClient client);
 
-        Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, TsSearchRequest request);
+        Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, SearchRequest request);
     }
 }

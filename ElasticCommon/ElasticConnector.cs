@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using ElasticCommon.Models;
+using ElasticCommon.SearchModels;
 using Elasticsearch.Net;
 using Microsoft.Azure;
 using Nest;
+using SearchRequest = ElasticCommon.Models.SearchRequest;
 
 namespace ElasticCommon
 {
@@ -68,7 +70,7 @@ namespace ElasticCommon
             client.Optimize(SuggestionIndexName);
         }
 
-        public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, TsSearchRequest request)
+        public async Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SearchRequest request)
         {
             // start watch
             var stopwatch = new Stopwatch();
@@ -136,7 +138,7 @@ namespace ElasticCommon
             client.Optimize(SearchIndexName);
         }
 
-        public async Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, TsSearchRequest request)
+        public async Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, SearchRequest request)
         {
             var stopwatch = new Stopwatch();
 

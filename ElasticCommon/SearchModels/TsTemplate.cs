@@ -3,7 +3,7 @@ using ElasticCommon.Converter;
 using Nest;
 using Newtonsoft.Json;
 
-namespace ElasticCommon.Models
+namespace ElasticCommon.SearchModels
 {
     [ElasticsearchType(IdProperty = "id", Name = "ts_template")]
     public class TsTemplate
