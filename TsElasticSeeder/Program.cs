@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -12,11 +13,11 @@ namespace TsElasticSeeder
 {
     public class Program
     {
-        private static readonly string DocumentDbEndpointUrl = ConfigurationManager.AppSettings["DocumentDbEndpointUrl"];
-        private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
-        private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
-        private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
-        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
+        private static readonly string DocumentDbEndpointUrl = CloudConfigurationManager.GetSetting("DocumentDbEndpointUrl");
+        private static readonly string AuthorizationKey = CloudConfigurationManager.GetSetting("AuthorizationKey");
+        private static readonly string DatabaseId = CloudConfigurationManager.GetSetting("DatabaseId");
+        private static readonly string SuggestionCollectionId = CloudConfigurationManager.GetSetting("SuggestionCollectionId");
+        private static readonly string TemplateCollectionId = CloudConfigurationManager.GetSetting("TemplateCollectionId");
 
         private static DocumentClient _documentClient;
 

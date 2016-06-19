@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
+using Microsoft.Azure;
 using Nest;
 using TsElasticCommon.Models;
 
@@ -14,7 +15,7 @@ namespace TsElasticCommon
     {
         private const string SearchIndexName = "ts-search-index";
         private const string SuggestionIndexName = "ts-suggestion-index";
-        private static readonly string ClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
+        private static readonly string ClusterUri = CloudConfigurationManager.GetSetting("ElasticClusterUri");
 
         public ElasticClient GetClient()
         {
@@ -27,7 +28,9 @@ namespace TsElasticCommon
 
             var settings = new ConnectionSettings(pool);
 
-            settings.BasicAuthentication("tsAdmin", "jxa70nbxhi1l19j3ju");
+            settings.BasicAuthentication(
+                CloudConfigurationManager.GetSetting("ElasticAdminUserName"),
+                CloudConfigurationManager.GetSetting("ElasticAdminPassword"));
 
             settings.MapDefaultTypeIndices(x =>
             {

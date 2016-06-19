@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using Microsoft.Azure;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -11,11 +12,11 @@ namespace TsElasticIndexer
 {
     public class Program
     {
-        private static readonly string EndpointUrl = ConfigurationManager.AppSettings["EndPointUrl"];
-        private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
-        private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
-        private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
-        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
+        private static readonly string EndpointUrl = CloudConfigurationManager.GetSetting("EndPointUrl");
+        private static readonly string AuthorizationKey = CloudConfigurationManager.GetSetting("AuthorizationKey");
+        private static readonly string DatabaseId = CloudConfigurationManager.GetSetting("DatabaseId");
+        private static readonly string SuggestionCollectionId = CloudConfigurationManager.GetSetting("SuggestionCollectionId");
+        private static readonly string TemplateCollectionId = CloudConfigurationManager.GetSetting("TemplateCollectionId");
 
         private static DocumentClient _documentClient;
         static void Main(string[] args)
@@ -80,7 +81,7 @@ namespace TsElasticIndexer
 
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-            var LastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+            var LastUpdatedDate = Convert.ToInt32(CloudConfigurationManager.GetSetting("LastUpdatedDate"));
             var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
 
             //build up the query string
@@ -107,7 +108,7 @@ namespace TsElasticIndexer
 
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-            var LastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+            var LastUpdatedDate = Convert.ToInt32(CloudConfigurationManager.GetSetting("LastUpdatedDate"));
             var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
 
             //build up the query string
