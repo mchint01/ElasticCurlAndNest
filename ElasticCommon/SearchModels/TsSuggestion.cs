@@ -1,11 +1,14 @@
-﻿using Nest;
+﻿using ElasticCommon.Converter;
+using Nest;
+using Newtonsoft.Json;
 
 namespace ElasticCommon.SearchModels
 {
     [ElasticsearchType(IdProperty = "id", Name = "ts_suggestion")]
     public class TsSuggestion
     {
-        [String(Index = FieldIndexOption.NotAnalyzed,Name = "id")]
+        [String(Index = FieldIndexOption.NotAnalyzed,
+            Name = "id")]
         public string Id { get; set; }
 
         [String(Name = "value",
@@ -24,6 +27,11 @@ namespace ElasticCommon.SearchModels
         [String(Name = "afmcCode",
             Index = FieldIndexOption.NotAnalyzed)]
         public string AfmcCode { get; set; }
+
+        [Boolean(Name = "deleted",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        [JsonConverter(typeof(BoolConverter))]
+        public bool Deleted { get; set; }
 
         public double Score { get; set; }
     }
