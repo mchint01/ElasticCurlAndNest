@@ -11,7 +11,7 @@ using TsElasticCommon.Models;
 
 namespace TsElasticCommon
 {
-    public class ElasticConnector
+    public class ElasticConnector : IElasticConnector
     {
         private const string SearchIndexName = "ts-search-index";
         private const string SuggestionIndexName = "ts-suggestion-index";

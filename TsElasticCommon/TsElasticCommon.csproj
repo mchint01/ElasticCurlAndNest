@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Converter\BoolConverter.cs" />
     <Compile Include="ElasticConnector.cs" />
+    <Compile Include="IElasticConnector.cs" />
     <Compile Include="Models\SearchResults.cs" />
     <Compile Include="Models\TsSearchRequest.cs" />
     <Compile Include="Models\TsSuggestion.cs" />
