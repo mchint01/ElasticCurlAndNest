@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using ElasticCommon.Converter;
 using Nest;
 using Newtonsoft.Json;
-using TsElasticCommon.Converter;
 
-namespace TsElasticCommon.Models
+namespace ElasticCommon.Models
 {
     [ElasticsearchType(IdProperty = "id", Name = "ts_template")]
     public class TsTemplate

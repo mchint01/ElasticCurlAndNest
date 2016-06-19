@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using ElasticCommon.Models;
 using Nest;
-using TsElasticCommon.Models;
 
-namespace TsElasticCommon
+namespace ElasticCommon
 {
     public interface IElasticConnector
     {

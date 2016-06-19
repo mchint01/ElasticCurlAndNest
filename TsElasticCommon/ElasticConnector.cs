@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using ElasticCommon.Models;
 using Elasticsearch.Net;
 using Microsoft.Azure;
 using Nest;
-using TsElasticCommon.Models;
 
-namespace TsElasticCommon
+namespace ElasticCommon
 {
     public class ElasticConnector : IElasticConnector
     {
