@@ -66,7 +66,7 @@ namespace TsElasticSeeder
 
                 var end = DateTime.Now;
 
-                Console.WriteLine("Time took to Seed Suggestions in Seconds {0}", (end - start).Seconds);
+                Console.WriteLine("Time took to Seed Suggestions in Seconds {0}", (end - start).TotalSeconds);
             }
 
             if (seedTemplates)
@@ -81,7 +81,7 @@ namespace TsElasticSeeder
 
                 var end = DateTime.Now;
 
-                Console.WriteLine("Time took to Seed Templates in Seconds {0}", (end - start).Seconds);
+                Console.WriteLine("Time took to Seed Templates in Seconds {0}", (end - start).TotalSeconds);
             }
 
             Console.ReadLine();
