@@ -2,14 +2,12 @@
 using System.Configuration;
 using System.Linq;
 using ElasticCommon;
-using ElasticCommon.Models;
 using ElasticCommon.SearchModels;
-using Microsoft.Azure;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 
-namespace TsElasticIndexer
+namespace TsElasticIndexerApp
 {
     public class Program
     {

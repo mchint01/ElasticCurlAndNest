@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TsElasticIndexer
+namespace TsElasticIndexerApp
 {
     public static class Extensions
     {
