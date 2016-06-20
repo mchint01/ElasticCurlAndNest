@@ -13,38 +13,51 @@ namespace TsElasticIndexer
 {
     public class Program
     {
-        private static readonly string EndpointUrl = CloudConfigurationManager.GetSetting("EndPointUrl");
-        private static readonly string AuthorizationKey = CloudConfigurationManager.GetSetting("AuthorizationKey");
-        private static readonly string DatabaseId = CloudConfigurationManager.GetSetting("DatabaseId");
-        private static readonly string SuggestionCollectionId = CloudConfigurationManager.GetSetting("SuggestionCollectionId");
-        private static readonly string TemplateCollectionId = CloudConfigurationManager.GetSetting("TemplateCollectionId");
+        private static readonly string DocumentDbEndpointUrl = ConfigurationManager.AppSettings["DocumentDbEndpointUrl"];
+        private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
+        private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
+        private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
+        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
+        private static readonly string ElasticClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
+        private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
+        private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
 
         private static DocumentClient _documentClient;
         static void Main(string[] args)
         {
-            Start();
+            Start(new TsIndexerRequest
+            {
+                AuthorizationKey = AuthorizationKey,
+                DatabaseId = DatabaseId,
+                SuggestionCollectionId = SuggestionCollectionId,
+                TemplateCollectionId = TemplateCollectionId,
+                DocumentDbEndpointUrl = DocumentDbEndpointUrl,
+                ElasticClusterUris = new []{ElasticClusterUri},
+                ElasticAdminUserName = ElasticAdminUserName,
+                ElasticAdminPassword = ElasticAdminPassword
+            });
         }
 
-        public static void Start()
+        public static void Start(TsIndexerRequest request)
         {
-            using (_documentClient = new DocumentClient(new Uri(EndpointUrl), AuthorizationKey))
+            using (_documentClient = new DocumentClient(new Uri(request.DocumentDbEndpointUrl), request.AuthorizationKey))
             {
                 //ensure the database & collection exist before running samples
-                Init();
+                Init(request);
 
                 //get all suggestions changed in last 10 mins and update them
-                UpdateSuggestionIndex(DatabaseId, SuggestionCollectionId);
+                UpdateSuggestionIndex(request);
 
                 //get all templates changed in last x mins and update them
-                UpdateTemplateIndex(DatabaseId, TemplateCollectionId);
+                UpdateTemplateIndex(request);
             }
         }
 
-        private static void Init()
+        private static void Init(TsIndexerRequest request)
         {
-            GetDatabase(DatabaseId);
+            GetDatabase(request.DatabaseId);
 
-            GetCollection(DatabaseId, SuggestionCollectionId);
+            GetCollection(request.DatabaseId, request.SuggestionCollectionId);
         }
 
         private static Database GetDatabase(string databaseId)
@@ -79,16 +92,17 @@ namespace TsElasticIndexer
             return collection;
         }
 
-        private static void UpdateSuggestionIndex(string databaseId, string collectionId)
+        private static void UpdateSuggestionIndex(TsIndexerRequest request)
         {
             var elasticConnector = new ElasticConnector();
 
-            var elasticClient = elasticConnector.GetClient();
+            var elasticClient = elasticConnector.GetClient(request.ElasticClusterUris,
+                request.ElasticAdminUserName, request.ElasticAdminPassword);
 
             // form documentDb collection uri
-            var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-            var LastUpdatedDate = Convert.ToInt32(CloudConfigurationManager.GetSetting("LastUpdatedDate"));
-            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(request.DatabaseId, request.SuggestionCollectionId);
+            var lastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-lastUpdatedDate).ToEpoch();
 
             //build up the query string
             var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);
@@ -114,15 +128,16 @@ namespace TsElasticIndexer
             }
         }
 
-        private static void UpdateTemplateIndex(string databaseId, string collectionId)
+        private static void UpdateTemplateIndex(TsIndexerRequest request)
         {
             var elasticConnector = new ElasticConnector();
 
-            var elasticClient = elasticConnector.GetClient();
+            var elasticClient = elasticConnector.GetClient(request.ElasticClusterUris, 
+                request.ElasticAdminUserName, request.ElasticAdminPassword);
 
             // form documentDb collection uri
-            var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
-            var LastUpdatedDate = Convert.ToInt32(CloudConfigurationManager.GetSetting("LastUpdatedDate"));
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(request.DatabaseId, request.TemplateCollectionId);
+            var LastUpdatedDate = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
             var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-LastUpdatedDate).ToEpoch();
 
             //build up the query string

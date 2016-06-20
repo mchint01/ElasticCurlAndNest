@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ElasticCommon.Models;
 using ElasticCommon.SearchModels;
 using Elasticsearch.Net;
-using Microsoft.Azure;
 using Nest;
 using SearchRequest = ElasticCommon.Models.SearchRequest;
 
@@ -16,22 +16,32 @@ namespace ElasticCommon
     {
         private const string SearchIndexName = "ts-search-index";
         private const string SuggestionIndexName = "ts-suggestion-index";
-        private static readonly string ClusterUri = CloudConfigurationManager.GetSetting("ElasticClusterUri");
 
-        public ElasticClient GetClient()
+        public ElasticClient GetClient(string[] clusterUris, string userName, string password)
         {
-            var nodes = new Uri[]
+
+            if (clusterUris == null || clusterUris.Length < 1)
             {
-                new Uri(ClusterUri)
-            };
+                throw new ArgumentNullException(nameof(clusterUris));
+            }
+
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                throw new ArgumentNullException(nameof(userName));
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+
+            var nodes = clusterUris.Select(x => new Uri(x)).ToArray();
 
             var pool = new StaticConnectionPool(nodes);
 
             var settings = new ConnectionSettings(pool);
 
-            settings.BasicAuthentication(
-                CloudConfigurationManager.GetSetting("ElasticAdminUserName"),
-                CloudConfigurationManager.GetSetting("ElasticAdminPassword"));
+            settings.BasicAuthentication(userName, password);
 
             settings.MapDefaultTypeIndices(x =>
             {

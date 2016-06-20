@@ -14,11 +14,14 @@ namespace TsElasticSeeder
 {
     public class Program
     {
-        private static readonly string DocumentDbEndpointUrl = CloudConfigurationManager.GetSetting("DocumentDbEndpointUrl");
-        private static readonly string AuthorizationKey = CloudConfigurationManager.GetSetting("AuthorizationKey");
-        private static readonly string DatabaseId = CloudConfigurationManager.GetSetting("DatabaseId");
-        private static readonly string SuggestionCollectionId = CloudConfigurationManager.GetSetting("SuggestionCollectionId");
-        private static readonly string TemplateCollectionId = CloudConfigurationManager.GetSetting("TemplateCollectionId");
+        private static readonly string DocumentDbEndpointUrl = ConfigurationManager.AppSettings["DocumentDbEndpointUrl"];
+        private static readonly string AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
+        private static readonly string DatabaseId = ConfigurationManager.AppSettings["DatabaseId"];
+        private static readonly string SuggestionCollectionId = ConfigurationManager.AppSettings["SuggestionCollectionId"];
+        private static readonly string TemplateCollectionId = ConfigurationManager.AppSettings["TemplateCollectionId"];
+        private static readonly string ElasticClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
+        private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
+        private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
 
         private static DocumentClient _documentClient;
 
@@ -123,7 +126,7 @@ namespace TsElasticSeeder
         {
             var elasticConnector = new ElasticConnector();
 
-            var elasticClient = elasticConnector.GetClient();
+            var elasticClient = elasticConnector.GetClient(new []{ ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
             // delete and re-create elastic index
             elasticConnector.DeleteSuggestionIndexAndReCreate(elasticClient);
@@ -169,7 +172,7 @@ namespace TsElasticSeeder
         {
             var elasticConnector = new ElasticConnector();
 
-            var elasticClient = elasticConnector.GetClient();
+            var elasticClient = elasticConnector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
             // delete and re-create elastic index
             elasticConnector.DeleteTemplateIndexAndReCreate(elasticClient);

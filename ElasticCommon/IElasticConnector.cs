@@ -8,7 +8,7 @@ namespace ElasticCommon
 {
     public interface IElasticConnector
     {
-        ElasticClient GetClient();
+        ElasticClient GetClient(string[] clusterUris, string userName, string password);
 
         void IndexSuggestionDocument(IElasticClient client, TsSuggestion model);
 

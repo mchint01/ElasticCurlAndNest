@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -15,11 +16,15 @@ namespace ElasticCurl
 {
     class Program
     {
+        private static readonly string ElasticClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
+        private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
+        private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
+
         static void Main(string[] args)
         {
             var connector = new ElasticConnector();
 
-            var client = connector.GetClient();
+            var client = connector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
             Console.WriteLine("Search Templates (T) or Suggestions (S)?");
 
