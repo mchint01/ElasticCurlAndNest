@@ -58,6 +58,16 @@ namespace ElasticCommon
             }
         }
 
+        public void DeleteSuggestionDocument(IElasticClient client, TsSuggestion model)
+        {
+            var response = client.Delete(new DeleteRequest(SuggestionIndexName, "ts_suggestion", model.Id));
+
+            if (!response.IsValid)
+            {
+                throw new Exception("Could not delete document from elastic", response.OriginalException);
+            }
+        }
+
         public void DeleteSuggestionIndexAndReCreate(IElasticClient client)
         {
             client.DeleteIndex(SuggestionIndexName);
@@ -126,6 +136,16 @@ namespace ElasticCommon
             }
         }
 
+        public void DeleteTemplateDocument(IElasticClient client, TsTemplate model)
+        {
+            var response = client.Delete(new DeleteRequest(SuggestionIndexName, "ts_template", model.Id));
+
+            if (!response.IsValid)
+            {
+                throw new Exception("Could not delete document from elastic", response.OriginalException);
+            }
+        }
+
         public void DeleteTemplateIndexAndReCreate(IElasticClient client)
         {
             client.DeleteIndex(SearchIndexName);
@@ -161,7 +181,7 @@ namespace ElasticCommon
                 {
                     var queryString = request.Query.ToLower().Trim();
 
-                    baseQuery =
+                    baseQuery = 
                         Query<TsTemplate>.Match(
                             m1 => m1.Field(f1 => f1.Title).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(

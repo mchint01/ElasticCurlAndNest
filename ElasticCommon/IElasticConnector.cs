@@ -12,6 +12,8 @@ namespace ElasticCommon
 
         void IndexSuggestionDocument(IElasticClient client, TsSuggestion model);
 
+        void DeleteSuggestionDocument(IElasticClient client, TsSuggestion model);
+
         void DeleteSuggestionIndexAndReCreate(IElasticClient client);
 
         void OptimizeSuggestionIndex(IElasticClient client);
@@ -19,6 +21,8 @@ namespace ElasticCommon
         Task<SearchResults<TsSuggestion>> GetSuggestions(IElasticClient client, SearchRequest request);
 
         void IndexTemplateDocument(IElasticClient client, TsTemplate model);
+
+        void DeleteTemplateDocument(IElasticClient client, TsTemplate model);
 
         void DeleteTemplateIndexAndReCreate(IElasticClient client);
 

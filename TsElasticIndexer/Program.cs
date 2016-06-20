@@ -94,10 +94,18 @@ namespace TsElasticIndexer
 
             foreach (var d in documents)
             {
-                var suggestion  = JsonConvert.DeserializeObject<TsSuggestion>(d.ToString());
+                TsSuggestion suggestion  = JsonConvert.DeserializeObject<TsSuggestion>(d.ToString());
 
-                //Updating the suggestion index
-                elasticConnector.IndexSuggestionDocument(elasticClient, suggestion);
+                if (suggestion.Deleted)
+                {
+                    //Delete the suggestion
+                    elasticConnector.DeleteSuggestionDocument(elasticClient, suggestion);
+                }
+                else
+                {
+                    //Updating the suggestion index
+                    elasticConnector.IndexSuggestionDocument(elasticClient, suggestion);
+                }
             }
         }
 
@@ -121,10 +129,18 @@ namespace TsElasticIndexer
 
             foreach (var d in documents)
             {
-                var template = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
+                TsTemplate template = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
 
-                //Updating the templates index
-                elasticConnector.IndexTemplateDocument(elasticClient, template);
+                if (template.Deleted)
+                {
+                    //Delete the template
+                    elasticConnector.DeleteTemplateDocument(elasticClient,template);
+                }
+                else
+                {
+                    //Updating the templates index
+                    elasticConnector.IndexTemplateDocument(elasticClient, template);
+                }
             }
         }
     }

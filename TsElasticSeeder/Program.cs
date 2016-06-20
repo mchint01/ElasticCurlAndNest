@@ -150,10 +150,13 @@ namespace TsElasticSeeder
 
                 foreach (var d in response)
                 {
-                    var model = JsonConvert.DeserializeObject<TsSuggestion>(d.ToString());
+                    TsSuggestion model = JsonConvert.DeserializeObject<TsSuggestion>(d.ToString());
 
-                    // Seed data to elastic
-                    elasticConnector.IndexSuggestionDocument(elasticClient, model);
+                    if (!model.Deleted)
+                    {
+                        // Seed data to elastic
+                        elasticConnector.IndexSuggestionDocument(elasticClient, model);
+                    }
                 }
 
             } while (!string.IsNullOrEmpty(continuation));
@@ -191,10 +194,13 @@ namespace TsElasticSeeder
 
                 foreach (var d in response)
                 {
-                    var model = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
+                    TsTemplate model = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
 
-                    // Seed data to elastic
-                    elasticConnector.IndexTemplateDocument(elasticClient, model);
+                    if (!model.Deleted)
+                    {
+                        // Seed data to elastic
+                        elasticConnector.IndexTemplateDocument(elasticClient, model);
+                    }
                 }
 
             } while (!string.IsNullOrEmpty(continuation));
