@@ -22,6 +22,11 @@ namespace TsElasticIndexer
         private static DocumentClient _documentClient;
         static void Main(string[] args)
         {
+            Start();
+        }
+
+        public static void Start()
+        {
             using (_documentClient = new DocumentClient(new Uri(EndpointUrl), AuthorizationKey))
             {
                 //ensure the database & collection exist before running samples
