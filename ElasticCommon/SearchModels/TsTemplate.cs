@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ElasticCommon.Converter;
 using Nest;
 using Newtonsoft.Json;
@@ -109,6 +110,10 @@ namespace ElasticCommon.SearchModels
             Index = NonStringIndexOption.NotAnalyzed)]
         [JsonConverter(typeof(BoolConverter))]
         public bool Deleted { get; set; }
+
+        [Date(Name = "lstDt",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public DateTimeOffset? LstDt { get; set; }
 
         public double Score { get; set; }
     }

@@ -154,8 +154,6 @@ namespace ElasticCommon
                         .PostTags("</b>")
                         .Fields(fields => fields.Field("*")));
 
-                //var baseQuery = Query<TsTemplate>.MatchAll();
-
                 var baseQuery =
                     Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
 
@@ -184,7 +182,7 @@ namespace ElasticCommon
 
                 x.Query(q => baseQuery);
 
-                x.Sort(s => s.Descending("_score"));
+                x.Sort(s => s.Descending("_score").Descending("lstDt"));
 
                 return x;
             });
