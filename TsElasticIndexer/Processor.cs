@@ -15,7 +15,7 @@ namespace TsElasticIndexer
     {
         private static DocumentClient _documentClient;
 
-        public static void Start(TsIndexerRequest request)
+        public void Start(TsIndexerRequest request)
         {
             using (_documentClient = new DocumentClient(new Uri(request.DocumentDbEndpointUrl), request.AuthorizationKey))
             {

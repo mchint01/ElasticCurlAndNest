@@ -63,10 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TsIndexerRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -76,6 +74,10 @@
     <ProjectReference Include="..\ElasticCommon\ElasticCommon.csproj">
       <Project>{f79a6941-ee96-41ff-8a48-1ce3898e1f41}</Project>
       <Name>ElasticCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TsElasticIndexer\TsElasticIndexer.csproj">
+      <Project>{cca365dc-6de7-45a3-8133-58ff0f1326e3}</Project>
+      <Name>TsElasticIndexer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
