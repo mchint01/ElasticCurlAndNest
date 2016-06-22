@@ -191,23 +191,25 @@ namespace ElasticCommon
                 {
                     var queryString = request.Query.ToLower().Trim();
 
-                    baseQuery = 
+                    baseQuery =
                         Query<TsTemplate>.Match(
-                            m1 => m1.Field(f1 => f1.Title).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.Title).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.Desc).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.Desc).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m3 => m3.Field(f3 => f3.By).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.By).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.SchlDist).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.SchlDist).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.TmplTags).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.TmplTags).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.TmplTypes).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.TmplCcss).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.InsAuthor).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                            m => m.Field(f => f.TmplTypes).Query(queryString).Analyzer("suggestionAnalyzer")) ||
                         Query<TsTemplate>.Match(
-                            m2 => m2.Field(f2 => f2.TmplCode).Query(queryString).Analyzer("suggestionAnalyzer"));
+                            m => m.Field(f => f.InsAuthor).Query(queryString).Analyzer("suggestionAnalyzer")) ||
+                        Query<TsTemplate>.Match(
+                            m => m.Field(f => f.TmplCode).Query(queryString).Analyzer("suggestionAnalyzer"));
                 }
 
                 x.Query(q => baseQuery);

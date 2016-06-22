@@ -13,6 +13,7 @@ namespace ElasticCommon.SearchModels
         {
             this.TmplTags = new List<string>();
             this.TmplTypes = new List<string>();
+            this.TmplCcss = new List<string>();
         }
 
 
@@ -62,6 +63,11 @@ namespace ElasticCommon.SearchModels
             Index = FieldIndexOption.Analyzed,
             Analyzer = "suggestionAnalyzer")]
         public List<string> TmplTags { get; set; }
+
+        [String(Name = "tmplCcss",
+            Index = FieldIndexOption.Analyzed,
+            Analyzer = "suggestionAnalyzer")]
+        public List<string> TmplCcss { get; set; }
 
 
         [String(Name = "tmplTypes",
