@@ -77,6 +77,7 @@ namespace ElasticCurl
                     Console.WriteLine("Authr    {0}", data.By);
                     Console.WriteLine("TmplCode {0}", data.TmplCode);
                     Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
+                    Console.WriteLine("TmplCcss {0}", string.Join(", ", data.TmplCcss));
                     Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
                     Console.WriteLine("InsAuthr {0}", data.InsAuthor);
                     Console.WriteLine("Score    {0}", data.Score);
