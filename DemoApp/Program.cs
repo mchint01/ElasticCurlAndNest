@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ElasticCommon;
+using System;
 using System.Configuration;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using ElasticCommon;
-using ElasticCommon.Models;
-using Nest;
-using Newtonsoft.Json;
 using SearchRequest = ElasticCommon.Models.SearchRequest;
 
 namespace ElasticCurl

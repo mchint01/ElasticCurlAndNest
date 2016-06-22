@@ -1,14 +1,12 @@
-﻿using System;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticCommon;
-using ElasticCommon.Models;
+﻿using ElasticCommon;
 using ElasticCommon.SearchModels;
-using Microsoft.Azure;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using System;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TsElasticSeeder
 {
