@@ -113,7 +113,7 @@ namespace TsElasticIndexer
 
             // form documentDb collection uri
             var collectionLink = UriFactory.CreateDocumentCollectionUri(request.DatabaseId, request.TemplateCollectionId);
-            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(--request.LastUpdatedDate).ToEpoch();
+            var timeToGoBackFrom = DateTime.UtcNow.AddMinutes(-request.LastUpdatedDate).ToEpoch();
 
             //build up the query string
             var sql = string.Format("SELECT * FROM c where c._ts >= {0}", timeToGoBackFrom);

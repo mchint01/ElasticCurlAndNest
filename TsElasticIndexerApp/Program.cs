@@ -20,6 +20,7 @@ namespace TsElasticIndexerApp
         private static readonly string ElasticClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
         private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
         private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
+        private static readonly int LastUpdatedTime = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
 
         static void Main(string[] args)
         {
@@ -33,7 +34,8 @@ namespace TsElasticIndexerApp
                 DocumentDbEndpointUrl = DocumentDbEndpointUrl,
                 ElasticClusterUris = new []{ElasticClusterUri},
                 ElasticAdminUserName = ElasticAdminUserName,
-                ElasticAdminPassword = ElasticAdminPassword
+                ElasticAdminPassword = ElasticAdminPassword,
+                LastUpdatedDate = LastUpdatedTime
             });
         }
     }
