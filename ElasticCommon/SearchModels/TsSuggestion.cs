@@ -28,6 +28,10 @@ namespace ElasticCommon.SearchModels
             Index = FieldIndexOption.NotAnalyzed)]
         public string AfmcCode { get; set; }
 
+        [String(Name = "tmplAuthorName",
+            Index = FieldIndexOption.NotAnalyzed)]
+        public string TmplAuthorName { get; set; }
+
         [Boolean(Name = "deleted",
             Index = NonStringIndexOption.NotAnalyzed)]
         [JsonConverter(typeof(BoolConverter))]
