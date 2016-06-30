@@ -78,6 +78,13 @@ namespace ElasticCommon
             }
         }
 
+        public bool CheckSuggestionDocumentExists(IElasticClient client, string id)
+        {
+            var response = client.Get<TsSuggestion>(new GetRequest(SuggestionIndexName, "ts_suggestion", id));
+
+            return response.IsValid;
+        }
+
         public void DeleteSuggestionIndexAndReCreate(IElasticClient client)
         {
             client.DeleteIndex(SuggestionIndexName);
@@ -148,12 +155,19 @@ namespace ElasticCommon
 
         public void DeleteTemplateDocument(IElasticClient client, TsTemplate model)
         {
-            var response = client.Delete(new DeleteRequest(SuggestionIndexName, "ts_template", model.Id));
+            var response = client.Delete(new DeleteRequest(SearchIndexName, "ts_template", model.Id));
 
             if (!response.IsValid)
             {
                 throw new Exception("Could not delete document from elastic", response.OriginalException);
             }
+        }
+
+        public bool CheckTemplateDocumentExists(IElasticClient client, string id)
+        {
+            var response = client.Get<TsTemplate>(new GetRequest(SearchIndexName, "ts_template", id));
+
+            return response.IsValid;
         }
 
         public void DeleteTemplateIndexAndReCreate(IElasticClient client)

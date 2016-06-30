@@ -93,8 +93,11 @@ namespace TsElasticIndexer
 
                 if (suggestion.Deleted)
                 {
-                    //Delete the suggestion
-                    elasticConnector.DeleteSuggestionDocument(elasticClient, suggestion);
+                    if (elasticConnector.CheckSuggestionDocumentExists(elasticClient, suggestion.Id))
+                    {
+                        //Delete the suggestion
+                        elasticConnector.DeleteSuggestionDocument(elasticClient, suggestion);
+                    }
                 }
                 else
                 {
@@ -128,8 +131,11 @@ namespace TsElasticIndexer
 
                 if (template.Deleted)
                 {
-                    //Delete the template
-                    elasticConnector.DeleteTemplateDocument(elasticClient, template);
+                    if (elasticConnector.CheckTemplateDocumentExists(elasticClient, template.Id))
+                    {
+                        //Delete the template
+                        elasticConnector.DeleteTemplateDocument(elasticClient, template);
+                    }
                 }
                 else
                 {
