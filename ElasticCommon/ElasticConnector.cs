@@ -205,25 +205,15 @@ namespace ElasticCommon
                 {
                     var queryString = request.Query.ToLower().Trim();
 
-                    baseQuery =
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.Title).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.Desc).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.By).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.SchlDist).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.TmplTags).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.TmplCcss).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.TmplTypes).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.InsAuthor).Query(queryString).Analyzer("suggestionAnalyzer")) ||
-                        Query<TsTemplate>.Match(
-                            m => m.Field(f => f.TmplCode).Query(queryString).Analyzer("suggestionAnalyzer"));
+                    baseQuery = Query<TsTemplate>.MultiMatch(mq=>mq
+                        .Fields(fs=>fs
+                            .Field(f1=>f1.TmplTags,5)
+                            .Field(f2=>f2.Title,4)
+                            .Field(f3=>f3.Desc,3)
+                            .Field(f4=>f4.InsAuthor,2))
+                        .Query(queryString)
+                        .Analyzer("suggestionAnalyzer"));
+                        
                 }
 
                 x.Query(q => baseQuery);
