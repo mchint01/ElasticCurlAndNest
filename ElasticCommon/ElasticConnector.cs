@@ -205,15 +205,28 @@ namespace ElasticCommon
                 {
                     var queryString = request.Query.ToLower().Trim();
 
-                    baseQuery = Query<TsTemplate>.MultiMatch(mq=>mq
-                        .Fields(fs=>fs
-                            .Field(f1=>f1.TmplTags,5)
-                            .Field(f2=>f2.Title,4)
-                            .Field(f3=>f3.Desc,3)
-                            .Field(f4=>f4.InsAuthor,2))
-                        .Query(queryString)
-                        .Analyzer("suggestionAnalyzer"));
-                        
+                    baseQuery = Query<TsTemplate>
+                        .Bool(bq => bq
+                            .Should(m => m
+                                .MultiMatch(mq => mq
+                                    .Fields(fs => fs
+                                        .Field(f1 => f1.TmplTags, 8)
+                                        .Field(f2 => f2.TmplCcss, 7)
+                                        .Field(f3 => f3.Title, 6)
+                                        .Field(f4 => f4.Desc, 5)
+                                        .Field(f5 => f5.By, 4)
+                                        .Field(f6 => f6.InsAuthor, 3)
+                                        .Field(f7 => f7.SchlDist, 2))
+                                    .MinimumShouldMatch(1)
+                                    .Query(queryString)
+                                    .Analyzer("suggestionAnalyzer")))
+                            .Should(mc => mc
+                                .Match(cq => cq
+                                    .Field(f => f.TmplCode)                                    
+                                    .MinimumShouldMatch(MinimumShouldMatch.Percentage(100))
+                                    .Query(queryString)
+                                    .Analyzer("suggestionAnalyzer")))
+                            .MinimumShouldMatch(1));
                 }
 
                 x.Query(q => baseQuery);
