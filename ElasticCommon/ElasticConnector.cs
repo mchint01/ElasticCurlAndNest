@@ -205,15 +205,20 @@ namespace ElasticCommon
                 {
                     var queryString = request.Query.ToLower().Trim();
 
-                    baseQuery = Query<TsTemplate>.MultiMatch(mq=>mq
-                        .Fields(fs=>fs
-                            .Field(f1=>f1.TmplTags,5)
-                            .Field(f2=>f2.Title,4)
-                            .Field(f3=>f3.Desc,3)
-                            .Field(f4=>f4.InsAuthor,2))
+                    // Order of priority to search
+                    // template tags, template ccss, template title, template description, author, inspired author, school district
+
+                    baseQuery = Query<TsTemplate>.MultiMatch(mq => mq
+                        .Fields(fs => fs
+                            .Field(f1 => f1.TmplTags, 7)
+                            .Field(f2 => f2.TmplCcss, 6)
+                            .Field(f3 => f3.Title, 5)
+                            .Field(f4 => f4.Desc, 4)
+                            .Field(f5 => f5.By, 3)
+                            .Field(f6 => f6.InsAuthor, 2)
+                            .Field(f7 => f7.SchlDist, 1))
                         .Query(queryString)
                         .Analyzer("suggestionAnalyzer"));
-                        
                 }
 
                 x.Query(q => baseQuery);
