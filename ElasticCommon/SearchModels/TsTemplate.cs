@@ -103,8 +103,7 @@ namespace ElasticCommon.SearchModels
 
 
         [String(Name = "tmplCode",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Index = FieldIndexOption.NotAnalyzed)]
         public string TmplCode { get; set; }
 
 
