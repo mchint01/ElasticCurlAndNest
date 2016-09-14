@@ -184,58 +184,85 @@ namespace ElasticCommon
 
         public async Task<SearchResults<TsTemplate>> GetTemplates(IElasticClient client, SearchRequest request)
         {
+            bool searchContinue = true;
+
             var stopwatch = new Stopwatch();
 
             stopwatch.Start();
 
-            var templates = await client.SearchAsync<TsTemplate>(x =>
+            var queryString = request.Query.Trim();
+            string pat = @"\w{3}-\d+-\d+";
+            Regex r = new Regex(pat, RegexOptions.IgnoreCase);
+            
+            if (r.Match(queryString).Success)
             {
-                x.Size(request.PageSize)
-                    .From(request.PageSize*request.CurrentPage)
-                    .MinScore(request.MinScore)
-                    .Highlight(hd => hd
-                        .PreTags("<b>")
-                        .PostTags("</b>")
-                        .Fields(fields => fields.Field("*")));
-
-                var baseQuery =
-                    Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
-
-                if (!string.IsNullOrEmpty(request.Query))
+                var codeTemplate = await client.SearchAsync<TsTemplate>(x =>
                 {
-                    var queryString = request.Query.ToLower().Trim();
+                    var baseQuery = Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.Term("tmplCode",queryString)).Filter(fff=>fff.Term("deleted","0")));
 
-                    baseQuery = Query<TsTemplate>
-                        .Bool(bq => bq
-                            .Should(m => m
-                                .MultiMatch(mq => mq
-                                    .Fields(fs => fs
-                                        .Field(f1 => f1.TmplTags, 8)
-                                        .Field(f2 => f2.TmplCcss, 7)
-                                        .Field(f3 => f3.Title, 6)
-                                        .Field(f4 => f4.Desc, 5)
-                                        .Field(f5 => f5.By, 4)
-                                        .Field(f6 => f6.InsAuthor, 3)
-                                        .Field(f7 => f7.SchlDist, 2))
-                                    .MinimumShouldMatch(1)
-                                    .Query(queryString)
-                                    .Analyzer("suggestionAnalyzer")))
-                            .Should(mc => mc
-                                .Match(cq => cq
-                                    .Field(f => f.TmplCode)                                    
-                                    .MinimumShouldMatch(MinimumShouldMatch.Percentage(100))
-                                    .Query(queryString)
-                                    .Analyzer("suggestionAnalyzer")))
-                            .MinimumShouldMatch(1));
+                    x.Query(q => baseQuery);
+
+                    x.Sort(s => s.Descending("lstDt"));
+
+                    return x;
                 }
+                );
+                if (codeTemplate.Hits.Count<IHit<TsTemplate>>() > 0)
+                {
+                    searchContinue = false;
 
-                x.Query(q => baseQuery);
+                    return HandlingTemplateResults(codeTemplate, stopwatch);
+                }
+            }
 
-                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+            if (searchContinue)
+            {
+                var templates = await client.SearchAsync<TsTemplate>(x =>
+                {
+                    x.Size(request.PageSize)
+                        .From(request.PageSize * request.CurrentPage)
+                        .MinScore(request.MinScore)
+                        .Highlight(hd => hd
+                            .PreTags("<b>")
+                            .PostTags("</b>")
+                            .Fields(fields => fields.Field("*")));
 
-                return x;
-            });
+                    var baseQuery =
+                        Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
 
+                    if (!string.IsNullOrEmpty(request.Query))
+                    {
+                        baseQuery = Query<TsTemplate>
+                            .Bool(bq => bq
+                                .Should(m => m
+                                    .MultiMatch(mq => mq
+                                        .Fields(fs => fs
+                                            .Field(f1 => f1.TmplTags, 8)
+                                            .Field(f2 => f2.TmplCcss, 7)
+                                            .Field(f3 => f3.Title, 6)
+                                            .Field(f4 => f4.Desc, 5)
+                                            .Field(f5 => f5.By, 4)
+                                            .Field(f6 => f6.InsAuthor, 3)
+                                            .Field(f7 => f7.SchlDist, 2))
+                                        .MinimumShouldMatch(1)
+                                        .Query(queryString)
+                                        .Analyzer("suggestionAnalyzer")))
+                                .Filter(fq => fq.Term("deleted", "0")));
+
+                    }
+
+                    x.Query(q => baseQuery);
+
+                    x.Sort(s => s.Descending("_score").Descending("lstDt"));
+
+                    return x;
+                });
+                return HandlingTemplateResults(templates, stopwatch);
+            }
+            return null;
+        }
+        private SearchResults<TsTemplate> HandlingTemplateResults(ISearchResponse<TsTemplate> templates, Stopwatch stopwatch)
+        {
             var response = new List<TsTemplate>();
 
             foreach (var hit in templates.Hits)
@@ -245,7 +272,6 @@ namespace ElasticCommon
 
                 response.Add(newTemplate);
             }
-
             stopwatch.Stop();
 
             return new SearchResults<TsTemplate>()
