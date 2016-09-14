@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ElasticCommon.Models;
 using ElasticCommon.SearchModels;
@@ -188,6 +189,31 @@ namespace ElasticCommon
 
             stopwatch.Start();
 
+            var queryString = request.Query.Trim();
+            const string pat = @"\w{3}-\d+-\d+";
+            var r = new Regex(pat, RegexOptions.IgnoreCase);
+
+            if (r.Match(queryString).Success)
+            {
+                var codeTemplate = await client.SearchAsync<TsTemplate>(x =>
+                {
+                    var baseQuery =
+                        Query<TsTemplate>.Bool(
+                            b => b.Must(mbox => mbox.Term("tmplCode", queryString)).Filter(fff => fff.Term("deleted", "0")));
+
+                    x.Query(q => baseQuery);
+
+                    x.Sort(s => s.Descending("lstDt"));
+
+                    return x;
+                });
+
+                if (codeTemplate.Hits.Any())
+                {
+                    return HandlingTemplateResults(codeTemplate, stopwatch);
+                }
+            }
+
             var templates = await client.SearchAsync<TsTemplate>(x =>
             {
                 x.Size(request.PageSize)
@@ -203,22 +229,25 @@ namespace ElasticCommon
 
                 if (!string.IsNullOrEmpty(request.Query))
                 {
-                    var queryString = request.Query.ToLower().Trim();
-
                     // Order of priority to search
                     // template tags, template ccss, template title, template description, author, inspired author, school district
+                    baseQuery = Query<TsTemplate>
+                        .Bool(bq => bq
+                            .Should(m => m
+                                .MultiMatch(mq => mq
+                                    .Fields(fs => fs
+                                        .Field(f1 => f1.TmplTags, 8)
+                                        .Field(f2 => f2.TmplCcss, 7)
+                                        .Field(f3 => f3.Title, 6)
+                                        .Field(f4 => f4.Desc, 5)
+                                        .Field(f5 => f5.By, 4)
+                                        .Field(f6 => f6.InsAuthor, 3)
+                                        .Field(f7 => f7.SchlDist, 2))
+                                    .MinimumShouldMatch(1)
+                                    .Query(queryString)
+                                    .Analyzer("suggestionAnalyzer")))
+                            .Filter(fq => fq.Term("deleted", "0")));
 
-                    baseQuery = Query<TsTemplate>.MultiMatch(mq => mq
-                        .Fields(fs => fs
-                            .Field(f1 => f1.TmplTags, 7)
-                            .Field(f2 => f2.TmplCcss, 6)
-                            .Field(f3 => f3.Title, 5)
-                            .Field(f4 => f4.Desc, 4)
-                            .Field(f5 => f5.By, 3)
-                            .Field(f6 => f6.InsAuthor, 2)
-                            .Field(f7 => f7.SchlDist, 1))
-                        .Query(queryString)
-                        .Analyzer("suggestionAnalyzer"));
                 }
 
                 x.Query(q => baseQuery);
@@ -227,7 +256,11 @@ namespace ElasticCommon
 
                 return x;
             });
+            return HandlingTemplateResults(templates, stopwatch);
+        }
 
+        private SearchResults<TsTemplate> HandlingTemplateResults(ISearchResponse<TsTemplate> templates, Stopwatch stopwatch)
+        {
             var response = new List<TsTemplate>();
 
             foreach (var hit in templates.Hits)
@@ -237,7 +270,6 @@ namespace ElasticCommon
 
                 response.Add(newTemplate);
             }
-
             stopwatch.Stop();
 
             return new SearchResults<TsTemplate>()
