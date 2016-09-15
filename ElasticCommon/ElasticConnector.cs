@@ -189,7 +189,7 @@ namespace ElasticCommon
 
             stopwatch.Start();
             
-            if(request.Query == null)
+            if(request.Query == null || request.Query == " ")
             {
                 request.Query = String.Empty;
             }
