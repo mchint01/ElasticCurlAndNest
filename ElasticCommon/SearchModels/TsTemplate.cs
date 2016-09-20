@@ -120,6 +120,18 @@ namespace ElasticCommon.SearchModels
             Index = NonStringIndexOption.NotAnalyzed)]
         public DateTimeOffset? LstDt { get; set; }
 
+        [Number(NumberType.Integer, 
+            Coerce =true, 
+            Name = "downloadCnt",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public int DownloadCount { get; set; }
+
+        [Number(NumberType.Integer, 
+            Coerce = true, 
+            Name = "clonedCnt",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public int ClonedCount { get; set; }
+
         public double Score { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticSeeder", "TsElasticSeeder\TsElasticSeeder.csproj", "{EDB53953-AE22-4091-BAAE-2A09D4E94109}"
 EndProject
@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticCommon", "ElasticCommon\ElasticCommon.csproj", "{F79A6941-EE96-41FF-8A48-1CE3898E1F41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticIndexerApp", "TsElasticIndexerApp\TsElasticIndexerApp.csproj", "{4A54B2A8-13E5-46F3-B500-70F318C1F889}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticIndexerTester", "TsElasticIndexerApp\TsElasticIndexerTester.csproj", "{4A54B2A8-13E5-46F3-B500-70F318C1F889}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticIndexer", "TsElasticIndexer\TsElasticIndexer.csproj", "{CCA365DC-6DE7-45A3-8133-58FF0F1326E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7557E637-5829-4E0D-ACDE-DEC959759158}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +44,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A54B2A8-13E5-46F3-B500-70F318C1F889} = {7557E637-5829-4E0D-ACDE-DEC959759158}
 	EndGlobalSection
 EndGlobal

@@ -7,8 +7,8 @@
     <ProjectGuid>{4A54B2A8-13E5-46F3-B500-70F318C1F889}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TsElasticIndexerApp</RootNamespace>
-    <AssemblyName>TsElasticIndexerApp</AssemblyName>
+    <RootNamespace>TsElasticIndexerTester</RootNamespace>
+    <AssemblyName>TsElasticIndexerTester</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
