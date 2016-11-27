@@ -132,6 +132,10 @@ namespace ElasticCommon.SearchModels
             Index = NonStringIndexOption.NotAnalyzed)]
         public int ClonedCnt { get; set; }
 
+        [String(Name = "escTitle",
+            Index = FieldIndexOption.NotAnalyzed)]
+        public string EscapedTitle { get; set; }
+
         public double Score { get; set; }
     }
 }

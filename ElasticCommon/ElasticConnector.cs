@@ -188,12 +188,12 @@ namespace ElasticCommon
             var stopwatch = new Stopwatch();
 
             stopwatch.Start();
-            
+
             if(request.Query == null || request.Query == " ")
             {
                 request.Query = String.Empty;
             }
-            
+
             var queryString = request.Query.Trim();
             const string pat = @"\w{3}-\d+-\d+";
             var r = new Regex(pat, RegexOptions.IgnoreCase);
