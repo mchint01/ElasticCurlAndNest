@@ -189,7 +189,7 @@ namespace ElasticCommon
 
             stopwatch.Start();
 
-            if(request.Query == null || request.Query == " ")
+            if (request.Query == null || request.Query == " ")
             {
                 request.Query = String.Empty;
             }
@@ -222,7 +222,7 @@ namespace ElasticCommon
             var templates = await client.SearchAsync<TsTemplate>(x =>
             {
                 x.Size(request.PageSize)
-                    .From(request.PageSize*request.CurrentPage)
+                    .From(request.PageSize * request.CurrentPage)
                     .MinScore(request.MinScore)
                     .Highlight(hd => hd
                         .PreTags("<b>")
@@ -236,23 +236,62 @@ namespace ElasticCommon
                 {
                     // Order of priority to search
                     // template tags, template ccss, template title, template description, author, inspired author, school district
+                    // Title, tmplTags, CCSS, description
                     baseQuery = Query<TsTemplate>
-                        .Bool(bq => bq
-                            .Should(m => m
-                                .MultiMatch(mq => mq
-                                    .Fields(fs => fs
-                                        .Field(f1 => f1.TmplTags, 8)
-                                        .Field(f2 => f2.TmplCcss, 7)
-                                        .Field(f3 => f3.Title, 6)
-                                        .Field(f4 => f4.Desc, 5)
-                                        .Field(f5 => f5.By, 4)
-                                        .Field(f6 => f6.InsAuthor, 3)
-                                        .Field(f7 => f7.SchlDist, 2))
-                                    .MinimumShouldMatch(1)
-                                    .Query(queryString)
-                                    .Analyzer("suggestionAnalyzer")))
-                            .Filter(fq => fq.Term("deleted", "0")));
+                        .FunctionScore(fs => fs
+                            .Boost(1)
+                            .Query(qq => qq
+                                .Bool(bq => bq
+                                    .Should(
+                                        m => m.Bool(mbo => mbo
+                                            .Should(mbs => mbs
+                                                .MultiMatch(mq => mq
+                                                .Fields(pfs => pfs
+                                                    .Field(f1 => f1.Title, 4)
+                                                    .Field(f2 => f2.TmplTags, 3)
+                                                    .Field(f3 => f3.TmplCcss, 2))
+                                                .MinimumShouldMatch(1)
+                                                .Query(queryString)
+                                                .Analyzer("suggestionAnalyzer"))
+                                            )
+                                            .Boost(100)
+                                        ),
+                                        m => m.Bool(mbb => mbb
+                                            .Should(mbbs => mbbs
+                                                .Match(mbbsm => mbbsm
+                                                    .Field(mbbsmf => mbbsmf.By)
+                                                    .Query("danielle")
+                                                )
+                                            )
+                                            .Boost(2)
+                                        ),
+                                        m => m.Match(dm => dm
+                                              .Field(dmf => dmf.Desc)
+                                              .Query(queryString)
+                                              .Analyzer("suggestionAnalyzer")
+                                        )
 
+                                    )
+                                    .Filter(fq => fq.Term("deleted", "0")))
+                            )
+                            .BoostMode(FunctionBoostMode.Multiply)
+                            .ScoreMode(FunctionScoreMode.Sum)
+                            .Functions(pts => pts
+                                .FieldValueFactor(fvf => fvf
+                                    .Field(fvff => fvff.DownloadCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .FieldValueFactor(fvd => fvd
+                                    .Field(fvdf => fvdf.ClonedCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .Weight(10)
+                            )
+                        );
                 }
 
                 x.Query(q => baseQuery);
