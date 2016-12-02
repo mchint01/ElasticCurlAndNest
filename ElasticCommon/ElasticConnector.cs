@@ -189,7 +189,7 @@ namespace ElasticCommon
 
             stopwatch.Start();
 
-            if (request.Query == null || request.Query == " ")
+            if(request.Query == null || request.Query == " ")
             {
                 request.Query = String.Empty;
             }
@@ -222,7 +222,7 @@ namespace ElasticCommon
             var templates = await client.SearchAsync<TsTemplate>(x =>
             {
                 x.Size(request.PageSize)
-                    .From(request.PageSize * request.CurrentPage)
+                    .From(request.PageSize*request.CurrentPage)
                     .MinScore(request.MinScore)
                     .Highlight(hd => hd
                         .PreTags("<b>")
@@ -236,7 +236,6 @@ namespace ElasticCommon
                 {
                     // Order of priority to search
                     // template tags, template ccss, template title, template description, author, inspired author, school district
-                    // Title, tmplTags, CCSS, description
                     baseQuery = Query<TsTemplate>
                         .FunctionScore(fs => fs
                             .Boost(1)
@@ -285,27 +284,6 @@ namespace ElasticCommon
                                               .Analyzer("suggestionAnalyzer")
                                         )
 
-                                    )
-                                    .Filter(fq => fq.Term("deleted", "0")))
-                            )
-                            .BoostMode(FunctionBoostMode.Multiply)
-                            .ScoreMode(FunctionScoreMode.Sum)
-                            .Functions(pts => pts
-                                .FieldValueFactor(fvf => fvf
-                                    .Field(fvff => fvff.DownloadCnt)
-                                    .Factor(2)
-                                    .Missing(1)
-                                    .Modifier(FieldValueFactorModifier.SquareRoot)
-                                )
-                                .FieldValueFactor(fvd => fvd
-                                    .Field(fvdf => fvdf.ClonedCnt)
-                                    .Factor(2)
-                                    .Missing(1)
-                                    .Modifier(FieldValueFactorModifier.SquareRoot)
-                                )
-                                .Weight(10)
-                            )
-                        );
                 }
 
                 x.Query(q => baseQuery);
