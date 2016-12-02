@@ -109,7 +109,7 @@ namespace ElasticCommon
 
             var suggestions = await client.SearchAsync<TsSuggestion>(x => x
                 .Size(request.PageSize)
-                .From(request.PageSize*request.CurrentPage)
+                .From(request.PageSize * request.CurrentPage)
                 .MinScore(request.MinScore)
                 .Highlight(hd => hd
                     .PreTags("<b>")
@@ -243,10 +243,24 @@ namespace ElasticCommon
                             .Query(qq => qq
                                 .Bool(bq => bq
                                     .Should(
+                                        m => m.Bool(mbm => mbm
+                                            .Must(mbmq => mbmq
+                                                .MultiMatch(mq => mq
+                                                    .Fields(pfs => pfs
+                                                    .Field(f1 => f1.Title, 4)
+                                                    .Field(f2 => f2.TmplTags, 3)
+                                                    .Field(f3 => f3.TmplCcss, 2))
+                                                .Operator(Operator.And)
+                                                .MinimumShouldMatch(1)
+                                                .Query(queryString)
+                                                .Analyzer("suggestionAnalyzer"))
+                                            )
+                                            .Boost(1000)
+                                        ),
                                         m => m.Bool(mbo => mbo
                                             .Should(mbs => mbs
                                                 .MultiMatch(mq => mq
-                                                .Fields(pfs => pfs
+                                                    .Fields(pfs => pfs
                                                     .Field(f1 => f1.Title, 4)
                                                     .Field(f2 => f2.TmplTags, 3)
                                                     .Field(f3 => f3.TmplCcss, 2))
