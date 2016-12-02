@@ -222,7 +222,7 @@ namespace ElasticCommon
             var templates = await client.SearchAsync<TsTemplate>(x =>
             {
                 x.Size(request.PageSize)
-                    .From(request.PageSize * request.CurrentPage)
+                    .From(request.PageSize*request.CurrentPage)
                     .MinScore(request.MinScore)
                     .Highlight(hd => hd
                         .PreTags("<b>")
@@ -236,7 +236,6 @@ namespace ElasticCommon
                 {
                     // Order of priority to search
                     // template tags, template ccss, template title, template description, author, inspired author, school district
-                    // Title, tmplTags, CCSS, description
                     baseQuery = Query<TsTemplate>
                         .FunctionScore(fs => fs
                             .Boost(1)
