@@ -34,7 +34,7 @@ namespace ElasticCommon.SearchModels
 
         [String(Name = "escTitle",
             Index = FieldIndexOption.NotAnalyzed)]
-        public string EscapedTitle { get; set; }
+        public string EscTitle { get; set; }
 
         [Boolean(Name = "deleted",
             Index = NonStringIndexOption.NotAnalyzed)]
