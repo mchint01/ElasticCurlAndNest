@@ -65,17 +65,16 @@ namespace ElasticCurl
                 foreach (var data in response.Results.OrderByDescending(x=>x.Score))
                 {
                     Console.WriteLine("Title    {0}", data.Title);
-                    //Console.WriteLine("Desc     {0}", data.Desc);
+                    Console.WriteLine("Desc     {0}", data.Desc);
                     Console.WriteLine("Authr    {0}", data.By);
-                    Console.WriteLine("Smiley   {0}", (data.ClonedCnt + data.DownloadCnt));
-                    //Console.WriteLine("TmplCode {0}", data.TmplCode);
+                    Console.WriteLine("TmplCode {0}", data.TmplCode);
                     Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
-                    //Console.WriteLine("TmplCcss {0}", string.Join(", ", data.TmplCcss));
-                    //Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
-                    //Console.WriteLine("InsAuthr {0}", data.InsAuthor);
+                    Console.WriteLine("TmplCcss {0}", string.Join(", ", data.TmplCcss));
+                    Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
+                    Console.WriteLine("InsAuthr {0}", data.InsAuthor);
                     Console.WriteLine("Score    {0}", data.Score);
-                    //Console.WriteLine("Featured {0}", data.IsFeatured);
-                    //Console.WriteLine("Deleted  {0}", data.Deleted);
+                    Console.WriteLine("Featured {0}", data.IsFeatured);
+                    Console.WriteLine("Deleted  {0}", data.Deleted);
 
                     //Console.WriteLine(JsonConvert.SerializeObject(data));
                     Console.WriteLine();
