@@ -137,6 +137,10 @@ namespace ElasticCommon.SearchModels
         public string EscTitle { get; set; }
 
         public double Score { get; set; }
+
+        [Boolean(Name = "isUploaded",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public bool IsUploaded { get; set; }
     }
 }
 
