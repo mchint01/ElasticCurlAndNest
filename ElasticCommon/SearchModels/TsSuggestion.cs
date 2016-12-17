@@ -46,5 +46,9 @@ namespace ElasticCommon.SearchModels
         [Boolean(Name = "isUploaded",
             Index = NonStringIndexOption.NotAnalyzed)]
         public bool IsUploaded { get; set; }
+
+        [Boolean(Name = "isLandscape ",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public bool IsLandscape { get; set; }
     }
 }
