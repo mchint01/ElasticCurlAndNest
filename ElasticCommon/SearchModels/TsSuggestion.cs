@@ -42,5 +42,13 @@ namespace ElasticCommon.SearchModels
         public bool Deleted { get; set; }
 
         public double Score { get; set; }
+
+        [Boolean(Name = "isUploaded",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public bool IsUploaded { get; set; }
+
+        [Boolean(Name = "isLandscape ",
+            Index = NonStringIndexOption.NotAnalyzed)]
+        public bool IsLandscape { get; set; }
     }
 }
