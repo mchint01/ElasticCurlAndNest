@@ -303,6 +303,101 @@ namespace ElasticCommon
             return HandlingTemplateResults(templates, stopwatch);
         }
 
+        public async Task<SearchResults<TsTemplate>> GetFiltTemplates(IElasticClient client, SearchRequest request)
+        {
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            if (request.Query == null || request.Query == " ")
+            {
+                request.Query = String.Empty;
+            }
+
+            var queryString = request.Query;
+
+            var templates = await client.SearchAsync<TsTemplate>(x =>
+            {
+                x.Size(request.PageSize)
+                    .From(request.PageSize * request.CurrentPage)
+                    .MinScore(request.MinScore)
+                    .Highlight(hd => hd
+                        .PreTags("<b>")
+                        .PostTags("</b>")
+                        .Fields(fields => fields.Field("*")));
+
+                var baseQuery =
+                    Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
+
+                if (!string.IsNullOrEmpty(request.Query))
+                {
+                    // tmplTags
+                    // filterAnalyzer
+                    //      "filterAnalyzer": {
+                    //         "filter": [
+                    //            "lowercase",
+                    //            "asciiFolding"
+                    //         ],
+                    //         "type": "custom",
+                    //         "tokenizer": "whitespace"
+                    //      }
+                    baseQuery = Query<TsTemplate>
+                        .FunctionScore(fs => fs
+                            .Boost(1)
+                            .Query(qq => qq
+                                .Bool(bq => bq
+                                    .Should(
+                                        m => m.Bool(mbo => mbo
+                                            .Should(mbs => mbs
+                                                .Match(mq=>mq
+                                                    .Field(f1=>f1.TmplTags)
+                                                    .Query(queryString)
+                                                    .Analyzer("filterAnalyzer")
+                                                )
+                                            )
+                                            .Boost(100)
+                                        ),
+                                        m => m.Bool(mbb => mbb
+                                            .Should(mbbs => mbbs
+                                                .Match(mbbsm => mbbsm
+                                                    .Field(mbbsmf => mbbsmf.By)
+                                                    .Query("danielle")
+                                                )
+                                            )
+                                            .Boost(2)
+                                        )
+                                    )
+                                    .Filter(fq => fq.Term("deleted", "0")))
+                            )
+                            .BoostMode(FunctionBoostMode.Multiply)
+                            .ScoreMode(FunctionScoreMode.Sum)
+                            .Functions(pts => pts
+                                .FieldValueFactor(fvf => fvf
+                                    .Field(fvff => fvff.DownloadCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .FieldValueFactor(fvd => fvd
+                                    .Field(fvdf => fvdf.ClonedCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .Weight(10)
+                            )
+                        );
+                }
+
+                x.Query(q => baseQuery);
+
+                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+
+                return x;
+            });
+            return HandlingTemplateResults(templates, stopwatch);
+        }
+
         private SearchResults<TsTemplate> HandlingTemplateResults(ISearchResponse<TsTemplate> templates, Stopwatch stopwatch)
         {
             var response = new List<TsTemplate>();

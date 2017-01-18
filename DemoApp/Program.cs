@@ -18,7 +18,7 @@ namespace ElasticCurl
 
             var client = connector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
-            Console.WriteLine("Search Templates (T) or Suggestions (S)?");
+            Console.WriteLine("Search Templates (T) or Suggestions (S) or Filter Cateory(F)?");
 
             var searchFor = Console.ReadLine();
 
@@ -63,6 +63,39 @@ namespace ElasticCurl
                 Console.WriteLine("Total records {0}", response.Count);
 
                 foreach (var data in response.Results.OrderByDescending(x=>x.Score))
+                {
+                    Console.WriteLine("Title    {0}", data.Title);
+                    Console.WriteLine("Desc     {0}", data.Desc);
+                    Console.WriteLine("Authr    {0}", data.By);
+                    Console.WriteLine("TmplCode {0}", data.TmplCode);
+                    Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
+                    Console.WriteLine("TmplCcss {0}", string.Join(", ", data.TmplCcss));
+                    Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
+                    Console.WriteLine("InsAuthr {0}", data.InsAuthor);
+                    Console.WriteLine("Score    {0}", data.Score);
+                    Console.WriteLine("Featured {0}", data.IsFeatured);
+                    Console.WriteLine("Deleted  {0}", data.Deleted);
+
+                    //Console.WriteLine(JsonConvert.SerializeObject(data));
+                    Console.WriteLine();
+                }
+
+                Console.WriteLine("Time taken to search Mill Seconds {0}", TimeSpan.FromTicks(response.Ticks).Milliseconds);
+            }
+
+            if (string.Equals("F", searchFor, StringComparison.OrdinalIgnoreCase))
+            {
+                var response = connector.GetTemplates(client, new SearchRequest
+                {
+                    Query = query,
+                    PageSize = 18,
+                    MinScore = 0.1,
+                    CurrentPage = 0
+                }).Result;
+
+                Console.WriteLine("Total records {0}", response.Count);
+
+                foreach (var data in response.Results.OrderByDescending(x => x.Score))
                 {
                     Console.WriteLine("Title    {0}", data.Title);
                     Console.WriteLine("Desc     {0}", data.Desc);
