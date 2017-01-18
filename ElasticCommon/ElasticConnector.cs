@@ -303,7 +303,7 @@ namespace ElasticCommon
             return HandlingTemplateResults(templates, stopwatch);
         }
 
-        public async Task<SearchResults<TsTemplate>> GetFiltTemplates(IElasticClient client, SearchRequest request)
+        public async Task<SearchResults<TsTemplate>> GetFilterTemplates(IElasticClient client, SearchRequest request)
         {
             var stopwatch = new Stopwatch();
 
@@ -530,11 +530,18 @@ namespace ElasticCommon
                 Tokenizer = "standard"
             };
 
+            var filterAnalyzer = new CustomAnalyzer
+            {
+                Filter = new List<string> { "lowercase", "asciiFolding" },
+                Tokenizer = "whitespace"
+            };
+
             var requestAnalysis = new Analysis
             {
                 Analyzers = new Analyzers
                 {
-                    {"suggestionAnalyzer", suggestionAnalyzer}
+                    {"suggestionAnalyzer", suggestionAnalyzer},
+                    {"filterAnalyzer", filterAnalyzer }
                 },
                 Tokenizers = new Tokenizers
                 {

@@ -85,7 +85,7 @@ namespace ElasticCurl
 
             if (string.Equals("F", searchFor, StringComparison.OrdinalIgnoreCase))
             {
-                var response = connector.GetTemplates(client, new SearchRequest
+                var response = connector.GetFilterTemplates(client, new SearchRequest
                 {
                     Query = query,
                     PageSize = 18,

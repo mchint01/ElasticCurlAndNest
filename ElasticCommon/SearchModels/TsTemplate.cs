@@ -61,7 +61,7 @@ namespace ElasticCommon.SearchModels
 
         [String(Name = "tmplTags",
             Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Analyzer = "filterAnalyzer")]
         public List<string> TmplTags { get; set; }
 
         [String(Name = "tmplCcss",
