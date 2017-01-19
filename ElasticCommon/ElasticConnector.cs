@@ -346,26 +346,12 @@ namespace ElasticCommon
                             .Boost(1)
                             .Query(qq => qq
                                 .Bool(bq => bq
-                                    .Should(
-                                        m => m.Bool(mbo => mbo
-                                            .Should(mbs => mbs
-                                                .Match(mq=>mq
-                                                    .Field(f1=>f1.TmplTags)
-                                                    .Query(queryString)
-                                                    .Analyzer("filterAnalyzer")
-                                                )
-                                            )
-                                            .Boost(100)
-                                        ),
-                                        m => m.Bool(mbb => mbb
-                                            .Should(mbbs => mbbs
-                                                .Match(mbbsm => mbbsm
-                                                    .Field(mbbsmf => mbbsmf.By)
-                                                    .Query("danielle")
-                                                )
-                                            )
-                                            .Boost(2)
-                                        )
+                                    .Should(sq => sq
+                                        .Match(mq=>mq
+                                            .Field(mqf=>mqf.TmplTags)
+                                            .Query(queryString)
+                                            .Operator(Operator.And)
+                                        )                                      
                                     )
                                     .Filter(fq => fq.Term("deleted", "0")))
                             )
