@@ -9,5 +9,7 @@ namespace ElasticCommon.Models
         public double MinScore { get; set; }
 
         public string Query { get; set; }
+
+        public string Filter { get; set; }
     }
 }

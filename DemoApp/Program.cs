@@ -18,7 +18,7 @@ namespace ElasticCurl
 
             var client = connector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
-            Console.WriteLine("Search Templates (T) or Suggestions (S) or Filter Cateory(F)?");
+            Console.WriteLine("Search Templates (T){pattern : [query],[filter]} or Suggestions (S)?");
 
             var searchFor = Console.ReadLine();
 
@@ -28,9 +28,11 @@ namespace ElasticCurl
 
             if (string.Equals("S", searchFor, StringComparison.OrdinalIgnoreCase))
             {
+                
                 var response = connector.GetSuggestions(client, new SearchRequest
                 {
                     Query = query,
+                    Filter = "",
                     PageSize = 20,
                     MinScore = 0.5
                 }).Result;
@@ -54,7 +56,8 @@ namespace ElasticCurl
             {
                 var response = connector.GetTemplates(client, new SearchRequest
                 {
-                    Query = query,
+                    Query = query.Split(',')[0],
+                    Filter = query.Split(',')[1],
                     PageSize = 18,
                     MinScore = 0.1,
                     CurrentPage = 0
@@ -73,6 +76,7 @@ namespace ElasticCurl
                     Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
                     Console.WriteLine("InsAuthr {0}", data.InsAuthor);
                     Console.WriteLine("Score    {0}", data.Score);
+                    Console.WriteLine("Smily    {0}", data.ClonedCnt + data.DownloadCnt);
                     Console.WriteLine("Featured {0}", data.IsFeatured);
                     Console.WriteLine("Deleted  {0}", data.Deleted);
 
@@ -81,33 +85,7 @@ namespace ElasticCurl
                 }
 
                 Console.WriteLine("Time taken to search Mill Seconds {0}", TimeSpan.FromTicks(response.Ticks).Milliseconds);
-            }
-
-            if (string.Equals("F", searchFor, StringComparison.OrdinalIgnoreCase))
-            {
-                var response = connector.GetFilterTemplates(client, new SearchRequest
-                {
-                    Query = query,
-                    PageSize = 18,
-                    MinScore = 0.1,
-                    CurrentPage = 0
-                }).Result;
-
-                Console.WriteLine("Total records {0}", response.Count);
-
-                foreach (var data in response.Results.OrderByDescending(x => x.Score))
-                {
-                    Console.WriteLine("Title    {0}", data.Title);
-                    Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
-                    Console.WriteLine("Smily    {0}", data.ClonedCnt + data.DownloadCnt);
-                    Console.WriteLine("Score    {0}", data.Score);
-
-                    //Console.WriteLine(JsonConvert.SerializeObject(data));
-                    Console.WriteLine();
-                }
-
-                Console.WriteLine("Time taken to search Mill Seconds {0}", TimeSpan.FromTicks(response.Ticks).Milliseconds);
-            }
+            }           
 
             Console.ReadLine();
         }
