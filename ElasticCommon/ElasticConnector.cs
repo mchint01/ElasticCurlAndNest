@@ -532,7 +532,7 @@ namespace ElasticCommon
 
             var filterAnalyzer = new CustomAnalyzer
             {
-                Filter = new List<string> { "lowercase", "asciiFolding" },
+                Filter = new List<string> { "lowercase", "asciifolding" },
                 Tokenizer = "whitespace"
             };
 
