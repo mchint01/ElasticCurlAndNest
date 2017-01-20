@@ -233,162 +233,111 @@ namespace ElasticCommon
                 var baseQuery =
                    Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
 
-                if (request.isSortBySmily)
+
+                var multiMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
+                                                                                            .Fields(mqsmf => mqsmf
+                                                                                                .Field(f1 => f1.By)
+                                                                                                .Field(f1 => f1.Title)
+                                                                                                .Field(f1 => f1.Desc)
+                                                                                                .Field(f1 => f1.TmplCcss)
+                                                                                            )
+                                                                                            .Query(queryString)
+                                                                                            .MinimumShouldMatch(1)
+                                                                                            .Analyzer("filterAnalyzer")
+                                                                                        );
+                
+                var shouldMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
+                                                                                            .Fields(mqsmf => mqsmf
+                                                                                                .Field(f1 => f1.By)
+                                                                                                .Field(f1 => f1.Title)
+                                                                                                .Field(f1 => f1.Desc)
+                                                                                                .Field(f1 => f1.TmplCcss)
+                                                                                            )
+                                                                                            .Query(queryString)
+                                                                                            .MinimumShouldMatch(1)
+                                                                                            .Analyzer("suggestionAnalyzer")
+                                                                                        );
+                var filterMatchQuery = new QueryContainerDescriptor<TsTemplate>().Match(mqm => mqm
+                                                                                        .Field(mqmf => mqmf.TmplTags)
+                                                                                        .Query(filterString)
+                                                                                        .Operator(Operator.And)
+                                                                                    );
+                
+                var boolQuery = new QueryContainer();
+
+                if (string.IsNullOrEmpty(request.Filter))
                 {
-                    if (string.IsNullOrEmpty(request.Filter))
+                    if (request.isPerfect)
                     {
-                        baseQuery = Query<TsTemplate>
-                            .FunctionScore(fs => fs
-                                .Boost(1)
-                                .Query(qq => qq
-                                    .Bool(bq => bq
-                                        .Must(mqs => mqs
-                                            .MultiMatch(mqsm => mqsm
-                                                .Fields(mqsmf => mqsmf
-                                                    .Field(f1 => f1.By)
-                                                    .Field(f1 => f1.Title)
-                                                    .Field(f1 => f1.Desc)
-                                                    .Field(f1 => f1.TmplCcss)
-                                                )
-                                                .Query(queryString)
-                                                .MinimumShouldMatch(1)
-                                                .Analyzer("filterAnalyzer")
-                                            )
-                                        )
-                                        .Filter(mqf => mqf
-                                            .Term("deleted", "0")
-                                        )
-                                    )
-                                )
-                                .BoostMode(FunctionBoostMode.Multiply)
-                                .ScoreMode(FunctionScoreMode.Sum)
-                                .Functions(pts => pts
-                                    .FieldValueFactor(fvf => fvf
-                                        .Field(fvff => fvff.DownloadCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .FieldValueFactor(fvd => fvd
-                                        .Field(fvdf => fvdf.ClonedCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .Weight(10)
-                                )
-                            );
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .Must(mq => multiMatchQuery)
+                            .Filter(mqf => mqf.Term("deleted", "0"))
+                        );
                     }
                     else
                     {
-                        baseQuery = Query<TsTemplate>
-                            .FunctionScore(fs => fs
-                                .Boost(1)
-                                .Query(qq => qq
-                                    .Bool(bq => bq
-                                        .Must(
-                                            mq => mq.Match(mqm => mqm
-                                                .Field(mqmf => mqmf.TmplTags)
-                                                .Query(filterString)
-                                                .Operator(Operator.And)
-                                            ),
-                                            mq=>mq.MultiMatch(mqsm => mqsm
-                                                .Fields(mqsmf => mqsmf
-                                                    .Field(f1 => f1.By)
-                                                    .Field(f1 => f1.Title)
-                                                    .Field(f1 => f1.Desc)
-                                                    .Field(f1 => f1.TmplCcss)
-                                                )
-                                                .Query(queryString)
-                                                .MinimumShouldMatch(1)
-                                                .Analyzer("filterAnalyzer")
-                                            )
-                                        )                                       
-                                        .Filter(mqf => mqf
-                                            .Term("deleted", "0")
-                                        )
-                                    )
-                                )
-                                .BoostMode(FunctionBoostMode.Multiply)
-                                .ScoreMode(FunctionScoreMode.Sum)
-                                .Functions(pts => pts
-                                    .FieldValueFactor(fvf => fvf
-                                        .Field(fvff => fvff.DownloadCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .FieldValueFactor(fvd => fvd
-                                        .Field(fvdf => fvdf.ClonedCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .Weight(10)
-                                )
-                            );
-                    }                    
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .MustNot(mqmm => multiMatchQuery)
+                            .Should(mqsm => shouldMatchQuery)
+                            .Filter(mqf => mqf.Term("deleted", "0"))
+                        );
+                    }
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(request.Filter))
+                    if (request.isPerfect)
                     {
-                        baseQuery = Query<TsTemplate>
-                            .Bool(bq => bq
-                                .Must(mqs => mqs
-                                    .MultiMatch(mqsm => mqsm
-                                        .Fields(mqsmf => mqsmf
-                                            .Field(f1 => f1.By)
-                                            .Field(f2 => f2.Title)
-                                            .Field(f3 => f3.Desc)
-                                            .Field(f4 => f4.TmplCcss)
-                                        )
-                                        .Query(queryString)
-                                        .MinimumShouldMatch(1)
-                                        .Analyzer("filterAnalyzer")
-                                    )
-                                )
-                                .Filter(mqf => mqf
-                                    .Term("deleted", "0")
-                                )
-                            );
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .Must(mq => filterMatchQuery, mq => multiMatchQuery)
+                            .Filter(mqf => mqf.Term("deleted", "0"))
+                        );
                     }
                     else
                     {
-                        baseQuery = Query<TsTemplate>
-                            .Bool(bq => bq
-                                .Must(
-                                    mq => mq.Match(mqm => mqm
-                                        .Field(mqmf => mqmf.TmplTags)
-                                        .Query(filterString)
-                                        .Operator(Operator.And)
-                                    ),
-                                    mq => mq.MultiMatch(mqsm => mqsm
-                                          .Fields(mqsmf => mqsmf
-                                              .Field(f1 => f1.By)
-                                              .Field(f2 => f2.Title)
-                                              .Field(f3 => f3.Desc)
-                                              .Field(f4 => f4.TmplCcss)
-                                          )
-                                          .Query(queryString)
-                                          .Operator(Operator.And)
-                                          .MinimumShouldMatch(1)
-                                          .Analyzer("filterAnalyzer")
-                                    )
-
-                                )
-                                .Filter(mqf => mqf
-                                    .Term("deleted", "0")
-                                )
-                            );
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .Must(mq => filterMatchQuery)
+                            .MustNot(mqmm => multiMatchQuery)
+                            .Should(mqsm => shouldMatchQuery)
+                            .Filter(mqf => mqf.Term("deleted", "0"))
+                        );
                     }
                     
-                    
-                }                              
+                }
 
-                x.Query(q => baseQuery);
+                if (request.isSortBySmily)
+                {
 
-                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                    baseQuery = Query<TsTemplate>
+                        .FunctionScore(fs => fs
+                            .Boost(1)
+                            .Query(qq => boolQuery)
+                            .BoostMode(FunctionBoostMode.Multiply)
+                            .ScoreMode(FunctionScoreMode.Sum)
+                            .Functions(pts => pts
+                                .FieldValueFactor(fvf => fvf
+                                    .Field(fvff => fvff.DownloadCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .FieldValueFactor(fvd => fvd
+                                    .Field(fvdf => fvdf.ClonedCnt)
+                                    .Factor(2)
+                                    .Missing(1)
+                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                                )
+                                .Weight(10)
+                            )
+                        );
+                    x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                }
+                else
+                {
+                    baseQuery = boolQuery;
+                    x.Sort(s => s.Descending("lstDt"));
+                }
+
+                x.Query(q => baseQuery);                
 
                 return x;
             });

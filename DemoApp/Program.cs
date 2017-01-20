@@ -62,25 +62,28 @@ namespace ElasticCurl
                     PageSize = 18,
                     MinScore = 0.1,
                     CurrentPage = 0,
-                    isSortBySmily = false
+                    isSortBySmily = true,
+                    isPerfect = true
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
 
                 foreach (var data in response.Results.OrderByDescending(x=>x.Score))
                 {
+                    Console.WriteLine("\n------------------------------------------\n");
                     Console.WriteLine("Title    {0}", data.Title);
                     Console.WriteLine("Desc     {0}", data.Desc);
                     Console.WriteLine("Authr    {0}", data.By);
-                    Console.WriteLine("TmplCode {0}", data.TmplCode);
+                    //Console.WriteLine("TmplCode {0}", data.TmplCode);
                     Console.WriteLine("TmplTags {0}", string.Join(", ", data.TmplTags));
                     Console.WriteLine("TmplCcss {0}", string.Join(", ", data.TmplCcss));
-                    Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
-                    Console.WriteLine("InsAuthr {0}", data.InsAuthor);
+                    //Console.WriteLine("TmplTyps {0}", string.Join(", ", data.TmplTypes));
+                    //Console.WriteLine("InsAuthr {0}", data.InsAuthor);
                     Console.WriteLine("Score    {0}", data.Score);
                     Console.WriteLine("Smily    {0}", data.ClonedCnt + data.DownloadCnt);
-                    Console.WriteLine("Featured {0}", data.IsFeatured);
-                    Console.WriteLine("Deleted  {0}", data.Deleted);
+                    Console.WriteLine("Created  {0}", data.LstDt);
+                    //Console.WriteLine("Featured {0}", data.IsFeatured);
+                    //Console.WriteLine("Deleted  {0}", data.Deleted);
 
                     //Console.WriteLine(JsonConvert.SerializeObject(data));
                     Console.WriteLine();
