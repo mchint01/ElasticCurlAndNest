@@ -34,7 +34,8 @@ namespace ElasticCurl
                     Query = query,
                     Filter = "",
                     PageSize = 20,
-                    MinScore = 0.5
+                    MinScore = 0.5,
+                    isSortBySmily = true
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
@@ -60,7 +61,8 @@ namespace ElasticCurl
                     Filter = query.Split(',')[1],
                     PageSize = 18,
                     MinScore = 0.1,
-                    CurrentPage = 0
+                    CurrentPage = 0,
+                    isSortBySmily = false
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);

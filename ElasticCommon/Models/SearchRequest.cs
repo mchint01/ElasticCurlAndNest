@@ -11,5 +11,8 @@ namespace ElasticCommon.Models
         public string Query { get; set; }
 
         public string Filter { get; set; }
+
+        public bool isSortBySmily { get; set; }
+
     }
 }
