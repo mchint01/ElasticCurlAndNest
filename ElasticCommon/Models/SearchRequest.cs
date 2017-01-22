@@ -13,7 +13,5 @@ namespace ElasticCommon.Models
         public string Filter { get; set; }
 
         public bool isSortBySmily { get; set; }
-
-        public bool isPerfect { get; set; }
     }
 }

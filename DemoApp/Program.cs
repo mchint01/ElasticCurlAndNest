@@ -62,8 +62,7 @@ namespace ElasticCurl
                     PageSize = 18,
                     MinScore = 0.1,
                     CurrentPage = 0,
-                    isSortBySmily = true,
-                    isPerfect = true
+                    isSortBySmily = false
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);

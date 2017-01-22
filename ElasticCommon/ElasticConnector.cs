@@ -236,27 +236,16 @@ namespace ElasticCommon
 
                 var multiMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
                                                                                             .Fields(mqsmf => mqsmf
-                                                                                                .Field(f1 => f1.By)
-                                                                                                .Field(f1 => f1.Title)
-                                                                                                .Field(f1 => f1.Desc)
-                                                                                                .Field(f1 => f1.TmplCcss)
-                                                                                            )
-                                                                                            .Query(queryString)
-                                                                                            .MinimumShouldMatch(1)
-                                                                                            .Analyzer("filterAnalyzer")
-                                                                                        );
-                
-                var shouldMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
-                                                                                            .Fields(mqsmf => mqsmf
-                                                                                                .Field(f1 => f1.By)
-                                                                                                .Field(f1 => f1.Title)
-                                                                                                .Field(f1 => f1.Desc)
-                                                                                                .Field(f1 => f1.TmplCcss)
+                                                                                                .Field(f1 => f1.Title, 10)
+                                                                                                .Field(f2 => f2.Desc, 7)
+                                                                                                .Field(f3 => f3.By,4)
+                                                                                                .Field(f4 => f4.TmplCcss)
                                                                                             )
                                                                                             .Query(queryString)
                                                                                             .MinimumShouldMatch(1)
                                                                                             .Analyzer("suggestionAnalyzer")
                                                                                         );
+
                 var filterMatchQuery = new QueryContainerDescriptor<TsTemplate>().Match(mqm => mqm
                                                                                         .Field(mqmf => mqmf.TmplTags)
                                                                                         .Query(filterString)
@@ -267,41 +256,20 @@ namespace ElasticCommon
 
                 if (string.IsNullOrEmpty(request.Filter))
                 {
-                    if (request.isPerfect)
-                    {
-                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                            .Must(mq => multiMatchQuery)
+                    boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .Should(mq => multiMatchQuery)
+                            .Boost(100)
                             .Filter(mqf => mqf.Term("deleted", "0"))
                         );
-                    }
-                    else
-                    {
-                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                            .MustNot(mqmm => multiMatchQuery)
-                            .Should(mqsm => shouldMatchQuery)
-                            .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
-                    }
                 }
                 else
                 {
-                    if (request.isPerfect)
-                    {
-                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                            .Must(mq => filterMatchQuery, mq => multiMatchQuery)
-                            .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
-                    }
-                    else
-                    {
-                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                            .Must(mq => filterMatchQuery)
-                            .MustNot(mqmm => multiMatchQuery)
-                            .Should(mqsm => shouldMatchQuery)
-                            .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
-                    }
-                    
+
+                    boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                        .Must(mq => filterMatchQuery, mq => multiMatchQuery)
+                        .Boost(100)
+                        .Filter(mqf => mqf.Term("deleted", "0"))
+                    );
                 }
 
                 if (request.isSortBySmily)
@@ -328,17 +296,15 @@ namespace ElasticCommon
                                 )
                                 .Weight(10)
                             )
-                        );
-                    x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                        );                   
                 }
                 else
                 {
                     baseQuery = boolQuery;
-                    x.Sort(s => s.Descending("lstDt"));
                 }
 
-                x.Query(q => baseQuery);                
-
+                x.Query(q => baseQuery);
+                x.Sort(s => s.Descending("_score").Descending("lstDt"));
                 return x;
             });
             return HandlingTemplateResults(templates, stopwatch);
