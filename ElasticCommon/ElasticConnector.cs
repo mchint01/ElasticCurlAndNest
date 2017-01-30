@@ -254,54 +254,58 @@ namespace ElasticCommon
                                                                                     );
                 
                 var boolQuery = new QueryContainer();
-
-                if (string.IsNullOrEmpty(request.Filter))
+                if (!(string.IsNullOrEmpty(request.Filter) || string.IsNullOrEmpty(queryString)))
                 {
-                    boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                            .Should(mq => multiMatchQuery)
+
+
+                    if (string.IsNullOrEmpty(request.Filter))
+                    {
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                                .Should(mq => multiMatchQuery)
+                                .Boost(100)
+                                .Filter(mqf => mqf.Term("deleted", "0"))
+                            );
+                    }
+                    else
+                    {
+
+                        boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
+                            .Must(mq => filterMatchQuery, mq => multiMatchQuery)
                             .Boost(100)
                             .Filter(mqf => mqf.Term("deleted", "0"))
                         );
-                }
-                else
-                {
+                    }
 
-                    boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(bq => bq
-                        .Must(mq => filterMatchQuery, mq => multiMatchQuery)
-                        .Boost(100)
-                        .Filter(mqf => mqf.Term("deleted", "0"))
-                    );
-                }
+                    if (request.isSortBySmily)
+                    {
 
-                if (request.isSortBySmily)
-                {
-
-                    baseQuery = Query<TsTemplate>
-                        .FunctionScore(fs => fs
-                            .Boost(1)
-                            .Query(qq => boolQuery)
-                            .BoostMode(FunctionBoostMode.Multiply)
-                            .ScoreMode(FunctionScoreMode.Sum)
-                            .Functions(pts => pts
-                                .FieldValueFactor(fvf => fvf
-                                    .Field(fvff => fvff.DownloadCnt)
-                                    .Factor(2)
-                                    .Missing(1)
-                                    .Modifier(FieldValueFactorModifier.SquareRoot)
+                        baseQuery = Query<TsTemplate>
+                            .FunctionScore(fs => fs
+                                .Boost(1)
+                                .Query(qq => boolQuery)
+                                .BoostMode(FunctionBoostMode.Multiply)
+                                .ScoreMode(FunctionScoreMode.Sum)
+                                .Functions(pts => pts
+                                    .FieldValueFactor(fvf => fvf
+                                        .Field(fvff => fvff.DownloadCnt)
+                                        .Factor(2)
+                                        .Missing(1)
+                                        .Modifier(FieldValueFactorModifier.SquareRoot)
+                                    )
+                                    .FieldValueFactor(fvd => fvd
+                                        .Field(fvdf => fvdf.ClonedCnt)
+                                        .Factor(2)
+                                        .Missing(1)
+                                        .Modifier(FieldValueFactorModifier.SquareRoot)
+                                    )
+                                    .Weight(10)
                                 )
-                                .FieldValueFactor(fvd => fvd
-                                    .Field(fvdf => fvdf.ClonedCnt)
-                                    .Factor(2)
-                                    .Missing(1)
-                                    .Modifier(FieldValueFactorModifier.SquareRoot)
-                                )
-                                .Weight(10)
-                            )
-                        );                   
-                }
-                else
-                {
-                    baseQuery = boolQuery;
+                            );
+                    }
+                    else
+                    {
+                        baseQuery = boolQuery;
+                    }
                 }
 
                 x.Query(q => baseQuery);
