@@ -240,6 +240,7 @@ namespace ElasticCommon
                                                                                                 .Field(f2 => f2.Desc, 7)
                                                                                                 .Field(f3 => f3.By,4)
                                                                                                 .Field(f4 => f4.TmplCcss)
+                                                                                                .Field(f5 => f5.TmplTags)
                                                                                             )
                                                                                             .Query(queryString)
                                                                                             .MinimumShouldMatch(1)
