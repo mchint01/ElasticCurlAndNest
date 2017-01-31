@@ -35,7 +35,7 @@ namespace ElasticCurl
                     Filter = "",
                     PageSize = 20,
                     MinScore = 0.5,
-                    isSortBySmily = true
+                    IsSortBySmily = true
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
@@ -62,7 +62,7 @@ namespace ElasticCurl
                     PageSize = 18,
                     MinScore = 0.1,
                     CurrentPage = 0,
-                    isSortBySmily = false
+                    IsSortBySmily = false
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
