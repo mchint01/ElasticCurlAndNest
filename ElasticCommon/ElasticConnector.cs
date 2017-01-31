@@ -276,7 +276,7 @@ namespace ElasticCommon
                         );
                     }
 
-                    if (request.isSortBySmily)
+                    if (request.IsSortBySmily)
                     {
 
                         baseQuery = Query<TsTemplate>
