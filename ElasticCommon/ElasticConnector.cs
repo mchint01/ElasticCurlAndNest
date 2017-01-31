@@ -254,7 +254,7 @@ namespace ElasticCommon
                                                                                     );
                 
                 var boolQuery = new QueryContainer();
-                if (!(string.IsNullOrEmpty(request.Filter) || string.IsNullOrEmpty(queryString)))
+                if (!string.IsNullOrEmpty(request.Filter) || !string.IsNullOrEmpty(queryString))
                 {
 
 
