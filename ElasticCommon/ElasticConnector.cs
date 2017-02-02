@@ -301,15 +301,17 @@ namespace ElasticCommon
                                     .Weight(10)
                                 )
                             );
+                        x.Sort(s => s.Descending("_score"));
                     }
                     else
                     {
                         baseQuery = boolQuery;
+                        x.Sort(s => s.Descending("_score").Descending("lstDt"));
                     }
                 }
 
                 x.Query(q => baseQuery);
-                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                
                 return x;
             });
             return HandlingTemplateResults(templates, stopwatch);
