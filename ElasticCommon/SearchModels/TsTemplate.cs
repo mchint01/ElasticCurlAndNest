@@ -23,13 +23,13 @@ namespace ElasticCommon.SearchModels
 
         [String(Name = "title",
             Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Analyzer = "searchAnalyzer")]
         public string Title { get; set; }
 
 
         [String(Name = "desc",
             Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Analyzer = "searchAnalyzer")]
         public string Desc { get; set; }
 
 
@@ -40,7 +40,7 @@ namespace ElasticCommon.SearchModels
 
         [String(Name = "by",
             Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Analyzer = "searchAnalyzer")]
         public string By { get; set; }
 
 
@@ -66,7 +66,7 @@ namespace ElasticCommon.SearchModels
 
         [String(Name = "tmplCcss",
             Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+            Analyzer = "searchAnalyzer")]
         public List<string> TmplCcss { get; set; }
 
 

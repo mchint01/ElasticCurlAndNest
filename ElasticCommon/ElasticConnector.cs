@@ -236,15 +236,15 @@ namespace ElasticCommon
 
                 var multiMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
                                                                                             .Fields(mqsmf => mqsmf
+                                                                                                .Field(f5 => f5.TmplTags,12)
                                                                                                 .Field(f1 => f1.Title, 10)
                                                                                                 .Field(f2 => f2.Desc, 7)
                                                                                                 .Field(f3 => f3.By,4)
-                                                                                                .Field(f4 => f4.TmplCcss)
-                                                                                                .Field(f5 => f5.TmplTags)
+                                                                                                .Field(f4 => f4.TmplCcss)                                                                                                
                                                                                             )
                                                                                             .Query(queryString)
                                                                                             .MinimumShouldMatch(1)
-                                                                                            .Analyzer("suggestionAnalyzer")
+                                                                                            .Analyzer("filterAnalyzer")
                                                                                         );
 
                 var filterMatchQuery = new QueryContainerDescriptor<TsTemplate>().Match(mqm => mqm
@@ -455,12 +455,19 @@ namespace ElasticCommon
                 Tokenizer = "whitespace"
             };
 
+            var searchAnalyzer = new CustomAnalyzer
+            {
+                Filter = new List<string> { "lowercase", "asciifolding" },
+                Tokenizer = "letter"
+            };
+
             var requestAnalysis = new Analysis
             {
                 Analyzers = new Analyzers
                 {
                     {"suggestionAnalyzer", suggestionAnalyzer},
-                    {"filterAnalyzer", filterAnalyzer }
+                    {"filterAnalyzer", filterAnalyzer },
+                    {"searchAnalyzer", searchAnalyzer }
                 },
                 Tokenizers = new Tokenizers
                 {
