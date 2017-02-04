@@ -309,6 +309,10 @@ namespace ElasticCommon
                         x.Sort(s => s.Descending("_score").Descending("lstDt"));
                     }
                 }
+                else
+                {
+                    x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                }
 
                 x.Query(q => baseQuery);
                 
