@@ -252,7 +252,8 @@ namespace ElasticCommon
                                                                                         .Operator(Operator.And)
                                                                                     );
                 
-                var boolQuery = new QueryContainer();
+                var boolQuery = new QueryContainerDescriptor<TsTemplate>().Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
+
                 if (!string.IsNullOrEmpty(request.Filter) || !string.IsNullOrEmpty(queryString))
                 {
 
@@ -274,44 +275,38 @@ namespace ElasticCommon
                             .Filter(mqf => mqf.Term("deleted", "0"))
                         );
                     }
+                }
 
-                    if (request.IsSortBySmily)
-                    {
 
-                        baseQuery = Query<TsTemplate>
-                            .FunctionScore(fs => fs
-                                .Boost(1)
-                                .Query(qq => boolQuery)
-                                .BoostMode(FunctionBoostMode.Multiply)
-                                .ScoreMode(FunctionScoreMode.Sum)
-                                .Functions(pts => pts
-                                    .FieldValueFactor(fvf => fvf
-                                        .Field(fvff => fvff.DownloadCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .FieldValueFactor(fvd => fvd
-                                        .Field(fvdf => fvdf.ClonedCnt)
-                                        .Factor(2)
-                                        .Missing(1)
-                                        .Modifier(FieldValueFactorModifier.SquareRoot)
-                                    )
-                                    .Weight(10)
+                if (request.IsSortBySmily)
+                {
+
+                    baseQuery = Query<TsTemplate>
+                        .FunctionScore(fs => fs
+                            .Boost(1)
+                            .Query(qq => boolQuery)
+                            .BoostMode(FunctionBoostMode.Max)
+                            .ScoreMode(FunctionScoreMode.Sum)
+                            .Functions(pts => pts
+                                .FieldValueFactor(fvf => fvf
+                                    .Field(fvff => fvff.DownloadCnt)
+                                    .Modifier(FieldValueFactorModifier.None)
                                 )
-                            );
-                        x.Sort(s => s.Descending("_score"));
-                    }
-                    else
-                    {
-                        baseQuery = boolQuery;
-                        x.Sort(s => s.Descending("_score").Descending("lstDt"));
-                    }
+                                .FieldValueFactor(fvd => fvd
+                                    .Field(fvdf => fvdf.ClonedCnt)
+                                    .Modifier(FieldValueFactorModifier.None)
+                                )
+                                .Weight(10)
+                            )
+                        );
+                    x.Sort(s => s.Descending("_score"));
                 }
                 else
                 {
+                    baseQuery = boolQuery;
                     x.Sort(s => s.Descending("_score").Descending("lstDt"));
                 }
+                
 
                 x.Query(q => baseQuery);
                 
