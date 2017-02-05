@@ -244,7 +244,6 @@ namespace ElasticCommon
                                                                                             )
                                                                                             .Query(queryString)
                                                                                             .MinimumShouldMatch(1)
-                                                                                            .Analyzer("filterAnalyzer")
                                                                                         );
 
                 var filterMatchQuery = new QueryContainerDescriptor<TsTemplate>().Match(mqm => mqm
@@ -461,7 +460,7 @@ namespace ElasticCommon
 
             var searchAnalyzer = new CustomAnalyzer
             {
-                Filter = new List<string> { "lowercase", "asciifolding" },
+                Filter = new List<string> { "lowercase", "asciifolding", "tsSynonym" },
                 Tokenizer = "letter"
             };
 
@@ -507,6 +506,21 @@ namespace ElasticCommon
                         {
                             MinGram = 1,
                             MaxGram = 15
+                        }
+                    },
+                    {
+                        "tsSynonym", new SynonymTokenFilter
+                        {
+                            Synonyms = new List<String>
+                            {
+                                "valentines,valentine",
+                                "fathers,father",
+                                "mothers,mother",
+                                "grandparents,grandparent",
+                                "veterans,veteran",
+                                "presidents,president",
+                                "patricks,patrick"
+                            }
                         }
                     }
                 }
