@@ -196,7 +196,7 @@ namespace TsElasticSeeder
                 foreach (var d in response)
                 {
                     TsTemplate model = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
-
+                    model.SmileyCnt = model.ClonedCnt + model.DownloadCnt;
                     if (!model.Deleted)
                     {
                         // Seed data to elastic

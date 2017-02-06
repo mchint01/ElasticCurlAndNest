@@ -139,6 +139,7 @@ namespace TsElasticIndexer
                 }
                 else
                 {
+                    template.SmileyCnt = template.ClonedCnt + template.DownloadCnt;
                     //Updating the templates index
                     elasticConnector.IndexTemplateDocument(elasticClient, template);
                 }
