@@ -285,7 +285,7 @@ namespace ElasticCommon
                         .FunctionScore(fs => fs
                             .Boost(1)
                             .Query(qq => boolQuery)
-                            .BoostMode(FunctionBoostMode.Max)
+                            .BoostMode(FunctionBoostMode.Sum)
                             .ScoreMode(FunctionScoreMode.Sum)
                             .Functions(pts => pts
                                 .FieldValueFactor(fvf => fvf
@@ -296,7 +296,6 @@ namespace ElasticCommon
                                     .Field(fvdf => fvdf.ClonedCnt)
                                     .Modifier(FieldValueFactorModifier.None)
                                 )
-                                .Weight(10)
                             )
                         );
                     x.Sort(s => s.Descending("_score"));
