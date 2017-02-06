@@ -132,11 +132,11 @@ namespace ElasticCommon.SearchModels
             Index = NonStringIndexOption.NotAnalyzed)]
         public int ClonedCnt { get; set; }
 
-        /*[Number(NumberType.Integer,
+        [Number(NumberType.Integer,
             Coerce = true,
             Name = "smileyCnt",
             Index = NonStringIndexOption.NotAnalyzed)]
-        public int SmileyCnt { get; set; }*/
+        public int SmileyCnt { get; set; }
 
         [String(Name = "escTitle",
             Index = FieldIndexOption.NotAnalyzed)]
