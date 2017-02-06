@@ -128,7 +128,7 @@ namespace TsElasticIndexer
             foreach (var d in documents)
             {
                 TsTemplate template = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
-
+                template.SmileyCnt = template.ClonedCnt + template.DownloadCnt;
                 if (template.Deleted)
                 {
                     if (elasticConnector.CheckTemplateDocumentExists(elasticClient, template.Id))
@@ -139,7 +139,6 @@ namespace TsElasticIndexer
                 }
                 else
                 {
-                    template.SmileyCnt = template.ClonedCnt + template.DownloadCnt;
                     //Updating the templates index
                     elasticConnector.IndexTemplateDocument(elasticClient, template);
                 }
