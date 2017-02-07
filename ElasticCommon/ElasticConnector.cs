@@ -236,7 +236,7 @@ namespace ElasticCommon
 
                 var multiMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
                                                                                             .Fields(mqsmf => mqsmf
-                                                                                                .Field(f1 => f1.TmplTags, 100)
+                                                                                                .Field(f1 => f1.TmplTags, 10)
                                                                                                 .Field(f2 => f2.Title, 5)
                                                                                                 .Field(f3 => f3.By, 3)
                                                                                                 .Field(f4 => f4.TmplCcss, 3)
