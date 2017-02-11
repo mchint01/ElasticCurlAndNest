@@ -206,7 +206,9 @@ namespace ElasticCommon
                 {
                     var baseQuery =
                         Query<TsTemplate>.Bool(
-                            b => b.Must(mbox => mbox.Term("tmplCode", queryString)).Filter(fff => fff.Term("deleted", "0")));
+                            b =>
+                                b.Must(mbox => mbox.Term("tmplCode", queryString))
+                                    .Filter(fff => fff.Term("deleted", "0")));
 
                     x.Query(q => baseQuery);
 
@@ -224,34 +226,33 @@ namespace ElasticCommon
             var templates = await client.SearchAsync<TsTemplate>(x =>
             {
                 x.Size(request.PageSize)
-                    .From(request.PageSize * request.CurrentPage)
+                    .From(request.PageSize*request.CurrentPage)
                     .MinScore(request.MinScore)
                     .Highlight(hd => hd
                         .PreTags("<b>")
                         .PostTags("</b>")
                         .Fields(fields => fields.Field("*")));
                 var baseQuery =
-                   Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
+                    Query<TsTemplate>.Bool(b => b.Must(mbox => mbox.MatchAll()).Filter(ff => ff.Term("deleted", "0")));
 
 
                 var multiMatchQuery = new QueryContainerDescriptor<TsTemplate>().MultiMatch(mqsm => mqsm
-                                                                                            .Fields(mqsmf => mqsmf
-                                                                                                .Field(f1 => f1.TmplTags, 12)
-                                                                                                .Field(f2 => f2.Title, 10)
-                                                                                                .Field(f3 => f3.By, 4)
-                                                                                                .Field(f4 => f4.TmplCcss, 1)
-                                                                                                .Field(f5 => f5.Desc, 7)
-                                                                                                
-                                                                                            )
-                                                                                            .Query(queryString)
-                                                                                            .MinimumShouldMatch(1)
-                                                                                        );
+                    .Fields(mqsmf => mqsmf
+                        .Field(f1 => f1.TmplTags, 12)
+                        .Field(f2 => f2.Title, 10)
+                        .Field(f3 => f3.By, 4)
+                        .Field(f4 => f4.TmplCcss, 1)
+                        .Field(f5 => f5.Desc, 7)
+                    )
+                    .Query(queryString)
+                    .MinimumShouldMatch(1)
+                    );
 
                 var filterMatchQuery = new QueryContainerDescriptor<TsTemplate>().Match(mqm => mqm
-                                                                                        .Field(mqmf => mqmf.TmplTags)
-                                                                                        .Query(filterString)
-                                                                                        .Operator(Operator.And)
-                                                                                    );
+                    .Field(mqmf => mqmf.TmplTags)
+                    .Query(filterString)
+                    .Operator(Operator.And)
+                    );
 
                 if (!string.IsNullOrEmpty(filterString))
                 {
@@ -260,13 +261,14 @@ namespace ElasticCommon
                         baseQuery = Query<TsTemplate>.Bool(b => b
                             .Must(multiMatchQuery && filterMatchQuery)
                             .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
-                    } else
+                            );
+                    }
+                    else
                     {
                         baseQuery = Query<TsTemplate>.Bool(b => b
                             .Must(filterMatchQuery)
                             .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
+                            );
                     }
                 }
                 else
@@ -276,26 +278,26 @@ namespace ElasticCommon
                         baseQuery = Query<TsTemplate>.Bool(b => b
                             .Must(multiMatchQuery)
                             .Filter(mqf => mqf.Term("deleted", "0"))
-                        );
+                            );
                     }
                 }
 
-                if (request.IsSortBySmily)
-                {
-                    x.Sort(s => s.Descending("_score").Descending("smileyCnt"));
-                }
-                else
-                {                    
-                    x.Sort(s => s.Descending("_score").Descending("lstDt"));
-                }
-                
+                //if (request.IsSortBySmily)
+                //{
+                //    x.Sort(s => s.Descending("_score").Descending("smileyCnt"));
+                //}
+                //else
+                //{
+                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+                //}
+
 
                 x.Query(q => baseQuery);
-                
+
                 return x;
             });
             return HandlingTemplateResults(templates, stopwatch);
-        }        
+        }
 
         private SearchResults<TsTemplate> HandlingTemplateResults(ISearchResponse<TsTemplate> templates, Stopwatch stopwatch)
         {
