@@ -71,7 +71,7 @@ namespace TsElasticIndexer
 
         private static void UpdateSuggestionIndex(TsIndexerRequest request)
         {
-            var elasticConnector = new ElasticConnector();
+            var elasticConnector = new ElasticConnector(request.TemplateIndexName, request.SuggestIndexName);
 
             var elasticClient = elasticConnector.GetClient(request.ElasticClusterUris,
                 request.ElasticAdminUserName, request.ElasticAdminPassword);
@@ -109,7 +109,7 @@ namespace TsElasticIndexer
 
         private static void UpdateTemplateIndex(TsIndexerRequest request)
         {
-            var elasticConnector = new ElasticConnector();
+            var elasticConnector = new ElasticConnector(request.TemplateIndexName, request.SuggestIndexName);
 
             var elasticClient = elasticConnector.GetClient(request.ElasticClusterUris,
                 request.ElasticAdminUserName, request.ElasticAdminPassword);

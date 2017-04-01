@@ -15,6 +15,8 @@ namespace TsElasticIndexerTester
         private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
         private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
         private static readonly int LastUpdatedTime = Convert.ToInt32(ConfigurationManager.AppSettings["LastUpdatedDate"]);
+        private static readonly string TemplateIndexName = ConfigurationManager.AppSettings["TemplateIndexName"];
+        private static readonly string SuggestIndexName = ConfigurationManager.AppSettings["SuggestIndexName"];
 
         static void Main(string[] args)
         {
@@ -29,7 +31,9 @@ namespace TsElasticIndexerTester
                 ElasticClusterUris = new []{ElasticClusterUri},
                 ElasticAdminUserName = ElasticAdminUserName,
                 ElasticAdminPassword = ElasticAdminPassword,
-                LastUpdatedDate = LastUpdatedTime
+                LastUpdatedDate = LastUpdatedTime,
+                SuggestIndexName = SuggestIndexName,
+                TemplateIndexName = TemplateIndexName
             });
         }
     }

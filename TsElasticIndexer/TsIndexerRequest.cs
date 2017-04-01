@@ -18,6 +18,10 @@
 
         public string ElasticAdminPassword { get; set; }
 
+        public string TemplateIndexName { get; set; }
+
+        public string SuggestIndexName { get; set; }
+
         public int LastUpdatedDate { get; set; }
     }
 }

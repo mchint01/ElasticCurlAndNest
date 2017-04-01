@@ -14,144 +14,143 @@ namespace ElasticCommon.SearchModels
             this.TmplTags = new List<string>();
             this.TmplTypes = new List<string>();
             this.TmplCcss = new List<string>();
+            this.TagGradeLevel = new List<int>();
+            this.TagLanguage = new List<string>();
+            this.TagResources = new List<string>();
+            this.TagEla = new List<string>();
+            this.TagThemes = new List<string>();
+            this.TagSubjectsPrefixed = new List<string>();
+            this.TagSubjects = new List<string>();
+            this.TagSpeciality = new List<string>();
+            this.TagStrategy = new List<string>();
         }
 
 
-        [String(Index = FieldIndexOption.NotAnalyzed, Name = "id")]
+        [Keyword(Name = "id")]
         public string Id { get; set; }
 
 
-        [String(Name = "title",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "searchAnalyzer")]
+        [Text(Name = "title", Analyzer = "en_base_analysis")]
         public string Title { get; set; }
 
 
-        [String(Name = "desc",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "searchAnalyzer")]
+        [Text(Name = "desc", Analyzer = "en_base_analysis")]
         public string Desc { get; set; }
 
 
-        [String(Name = "tmplUri",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "tmplUri", Normalizer = "base_normalizer")]
         public string TmplUri { get; set; }
 
 
-        [String(Name = "by",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "searchAnalyzer")]
+        [Text(Name = "by", Analyzer = "en_base_analysis")]
         public string By { get; set; }
 
 
-        [String(Name = "byUri",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "byUri", Normalizer = "base_normalizer")]
         public string ByUri { get; set; }
 
 
-        [String(Name = "schlDist",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+        [Text(Name = "schlDist", Analyzer = "en_base_analysis")]
         public string SchlDist { get; set; }
 
 
-        [String(Name = "afmcCode",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "afmcCode", Normalizer = "base_normalizer")]
         public string AfmcCode { get; set; }
 
-        [String(Name = "tmplTags",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "filterAnalyzer")]
+        [Text(Name = "tmplTags", Analyzer = "en_base_analysis")]
         public List<string> TmplTags { get; set; }
 
-        [String(Name = "tmplCcss",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "searchAnalyzer")]
+        [Text(Name = "tmplCcss", Analyzer = "en_base_analysis")]
         public List<string> TmplCcss { get; set; }
 
 
-        [String(Name = "tmplTypes",
-         Index = FieldIndexOption.Analyzed,
-         Analyzer = "suggestionAnalyzer")]
+        [Text(Name = "tmplTypes", Analyzer = "en_base_analysis")]
         public List<string> TmplTypes { get; set; }
 
 
-        [String(Name = "insTmplId",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "insTmplId", Normalizer = "base_normalizer")]
         public string InsTmplId { get; set; }
 
 
-        [String(Name = "insAuthor",
-            Index = FieldIndexOption.Analyzed,
-            Analyzer = "suggestionAnalyzer")]
+        [Text(Name = "insAuthor", Analyzer = "en_base_analysis")]
         public string InsAuthor { get; set; }
 
+        [Text(Name = "spelldata", Analyzer = "en_base_analysis")]
+        public string SpellData { get; set; }
 
-        [String(Name = "insAfmcCode",
-            Index = FieldIndexOption.NotAnalyzed)]
+
+        [Keyword(Name = "insAfmcCode", Normalizer = "base_normalizer")]
         public string InsAfmcCode { get; set; }
 
 
-        [String(Name = "insAutherUrl",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "insAutherUrl", Normalizer = "base_normalizer")]
         public string InsAutherUrl { get; set; }
 
 
-        [String(Name = "authorId",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "authorId", Normalizer = "base_normalizer")]
         public string AuthorId { get; set; }
 
 
-        [String(Name = "tmplCode",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "tmplCode", Normalizer = "base_normalizer")]
         public string TmplCode { get; set; }
 
 
-        [String(Name = "isFeatured",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "isFeatured")]
         public string IsFeatured { get; set; }
 
-        [Boolean(Name = "deleted",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "deleted")]
         [JsonConverter(typeof(BoolConverter))]
         public bool Deleted { get; set; }
 
-        [Date(Name = "lstDt",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Date(Name = "lstDt")]
         public DateTimeOffset? LstDt { get; set; }
 
-        [Number(NumberType.Integer,
-            Coerce =true,
-            Name = "downloadCnt",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Number(NumberType.Integer, Coerce = true, Name = "downloadCnt")]
         public int DownloadCnt { get; set; }
 
-        [Number(NumberType.Integer,
-            Coerce = true,
-            Name = "clonedCnt",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Number(NumberType.Integer, Coerce = true, Name = "clonedCnt")]
         public int ClonedCnt { get; set; }
 
-        [Number(NumberType.Integer,
-            Coerce = true,
-            Name = "smileyCnt",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Number(NumberType.Integer, Coerce = true, Name = "smileyCnt")]
         public int SmileyCnt { get; set; }
 
-        [String(Name = "escTitle",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "escTitle")]
         public string EscTitle { get; set; }
 
         public double Score { get; set; }
 
-        [Boolean(Name = "isUploaded",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "isUploaded")]
         public bool IsUploaded { get; set; }
 
 
-        [Boolean(Name = "isLandscape ",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "isLandscape")]
         public bool IsLandscape { get; set; }
+
+        [Keyword(Name = "tagGradeLevel", Normalizer = "base_normalizer")]
+        public List<int> TagGradeLevel { get; set; }
+
+        [Keyword(Name = "tagResources", Normalizer = "base_normalizer")]
+        public List<string> TagResources { get; set; }
+
+        [Keyword(Name = "tagLanguage", Normalizer = "base_normalizer")]
+        public List<string> TagLanguage { get; set; }
+
+        [Keyword(Name = "tagEla", Normalizer = "base_normalizer")]
+        public List<string> TagEla { get; set; }
+
+        [Keyword(Name = "tagThemes", Normalizer = "base_normalizer")]
+        public List<string> TagThemes { get; set; }
+
+        [Keyword(Name = "tagSubjectsPrefixed", Normalizer = "base_normalizer")]
+        public List<string> TagSubjectsPrefixed { get; set; }
+
+        [Keyword(Name = "tagSubjects", Normalizer = "base_normalizer")]
+        public List<string> TagSubjects { get; set; }
+
+        [Keyword(Name = "tagSpeciality", Normalizer = "base_normalizer")]
+        public List<string> TagSpeciality { get; set; }
+
+        [Keyword(Name = "tagStrategy", Normalizer = "base_normalizer")]
+        public List<string> TagStrategy { get; set; }
     }
 }
-

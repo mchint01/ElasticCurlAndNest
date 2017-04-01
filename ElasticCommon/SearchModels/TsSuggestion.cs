@@ -7,48 +7,38 @@ namespace ElasticCommon.SearchModels
     [ElasticsearchType(IdProperty = "id", Name = "ts_suggestion")]
     public class TsSuggestion
     {
-        [String(Index = FieldIndexOption.NotAnalyzed,
-            Name = "id")]
+        [Keyword(Name = "id")]
         public string Id { get; set; }
 
-        [String(Name = "value",
-            Index = FieldIndexOption.Analyzed,
+        [Text(Name = "value",
             Analyzer = "suggestionAnalyzer")]
         public string Value { get; set; }
 
-        [String(Name = "valueType",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "valueType")]
         public string ValueType { get; set; }
 
-        [String(Name = "imageUrl",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "imageUrl")]
         public string ImageUrl { get; set; }
 
-        [String(Name = "afmcCode",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "afmcCode")]
         public string AfmcCode { get; set; }
 
-        [String(Name = "tmplAuthorName",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "tmplAuthorName")]
         public string TmplAuthorName { get; set; }
 
-        [String(Name = "escTitle",
-            Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword(Name = "escTitle")]
         public string EscTitle { get; set; }
 
-        [Boolean(Name = "deleted",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "deleted")]
         [JsonConverter(typeof(BoolConverter))]
         public bool Deleted { get; set; }
 
         public double Score { get; set; }
 
-        [Boolean(Name = "isUploaded",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "isUploaded")]
         public bool IsUploaded { get; set; }
 
-        [Boolean(Name = "isLandscape ",
-            Index = NonStringIndexOption.NotAnalyzed)]
+        [Boolean(Name = "isLandscape ")]
         public bool IsLandscape { get; set; }
     }
 }

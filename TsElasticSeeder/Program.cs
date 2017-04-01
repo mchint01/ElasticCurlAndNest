@@ -20,6 +20,8 @@ namespace TsElasticSeeder
         private static readonly string ElasticClusterUri = ConfigurationManager.AppSettings["ElasticClusterUri"];
         private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
         private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
+        private static readonly string TemplateIndexName = ConfigurationManager.AppSettings["TemplateIndexName"];
+        private static readonly string SuggestIndexName  = ConfigurationManager.AppSettings["SuggestIndexName"];
 
         private static DocumentClient _documentClient;
 
@@ -30,11 +32,11 @@ namespace TsElasticSeeder
                 //ensure the database & collection exist before running samples
                 Init();
 
-                Console.WriteLine("Seed Suggestions (Y/N)?");
+                Console.WriteLine(String.Format("Seed Suggestions: {0} (Y/N)?",  SuggestIndexName));
 
                 var seedSuggestions = Console.ReadLine();
 
-                Console.WriteLine("Seed Templates (Y/N)?");
+                Console.WriteLine(String.Format("Seed Templates: {0} (Y/N)?", TemplateIndexName));
 
                 var seedTemplates = Console.ReadLine();
 
@@ -122,9 +124,9 @@ namespace TsElasticSeeder
 
         private static async Task GetAllSuggestionsFromCollectionAndSeedToElastic(string databaseId, string collectionId)
         {
-            var elasticConnector = new ElasticConnector();
+            var elasticConnector = new ElasticConnector(TemplateIndexName, SuggestIndexName);
 
-            var elasticClient = elasticConnector.GetClient(new []{ ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
+            var elasticClient = elasticConnector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
             // delete and re-create elastic index
             elasticConnector.DeleteSuggestionIndexAndReCreate(elasticClient);
@@ -168,7 +170,7 @@ namespace TsElasticSeeder
 
         private static async Task GetAllTemplatesFromCollectionAndSeedToElastic(string databaseId, string collectionId)
         {
-            var elasticConnector = new ElasticConnector();
+            var elasticConnector = new ElasticConnector(TemplateIndexName, SuggestIndexName);
 
             var elasticClient = elasticConnector.GetClient(new[] { ElasticClusterUri }, ElasticAdminUserName, ElasticAdminPassword);
 
@@ -195,6 +197,7 @@ namespace TsElasticSeeder
 
                 foreach (var d in response)
                 {
+                    Console.Out.WriteLine(d.ToString());
                     TsTemplate model = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
                     model.SmileyCnt = model.ClonedCnt + model.DownloadCnt;
                     if (!model.Deleted)
