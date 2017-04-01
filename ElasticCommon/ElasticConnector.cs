@@ -17,7 +17,6 @@ namespace ElasticCommon
     {
         public ElasticConnector()
         {
-
         }
 
         public ElasticConnector(string searchIndexName, string suggestIndexName)

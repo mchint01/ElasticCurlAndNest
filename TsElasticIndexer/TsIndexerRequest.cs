@@ -2,6 +2,12 @@
 {
     public class TsIndexerRequest
     {
+        public TsIndexerRequest()
+        {
+            TemplateIndexName = "ts-search-index";
+            SuggestIndexName = "ts-suggestion-index";
+        }
+
         public string DocumentDbEndpointUrl { get; set; }
 
         public string AuthorizationKey { get; set; }
