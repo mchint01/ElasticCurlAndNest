@@ -31,20 +31,7 @@ namespace ElasticCommon
         public ElasticClient GetClient(string[] clusterUris, string userName, string password)
         {
 
-            if (clusterUris == null || clusterUris.Length < 1)
-            {
-                throw new ArgumentNullException(nameof(clusterUris));
-            }
-
-            if (string.IsNullOrWhiteSpace(userName))
-            {
-                throw new ArgumentNullException(nameof(userName));
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentNullException(nameof(password));
-            }
+    
 
             var nodes = clusterUris.Select(x => new Uri(x)).ToArray();
 
@@ -346,8 +333,14 @@ namespace ElasticCommon
                                                                                                                             .Field(mff => mff.Desc.Suffix("nostop")))
                                   ));
 
-
-                x.Sort(s => s.Descending("_score").Descending("lstDt"));
+		if (request.Order == SearchOrdering.popular)
+		{
+		     x.Sort(s => s.Descending(f => f.SmileyCnt).Descending("_score"));	
+		} else if (request.Order == SearchOrdering.recent) { 
+		     x.Sort(s => s.Descending(f => f.LstDt).Descending("_score"));
+		} else {
+		     x.Sort(s => s.Descending("_score").Descending(f => f.LstDt));	
+		}
 
                 x.Query(q => outerMostQuery);
 

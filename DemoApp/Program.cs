@@ -46,7 +46,7 @@ namespace ElasticCurl
                     Filters = filters,
                     PageSize = 20,
                     MinScore = 0.5,
-                    IsSortBySmily = true
+		    Order = ElasticCommon.Models.SearchOrdering.popular
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
@@ -80,7 +80,7 @@ namespace ElasticCurl
                     PageSize = 18,
                     MinScore = 0.1,
                     CurrentPage = 0,
-                    IsSortBySmily = false
+		    Order = ElasticCommon.Models.SearchOrdering.relevant
                 }).Result;
 
                 Console.WriteLine("Total records {0}", response.Count);
