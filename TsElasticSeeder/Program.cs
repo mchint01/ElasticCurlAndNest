@@ -4,8 +4,10 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace TsElasticSeeder
@@ -21,7 +23,7 @@ namespace TsElasticSeeder
         private static readonly string ElasticAdminUserName = ConfigurationManager.AppSettings["ElasticAdminUserName"];
         private static readonly string ElasticAdminPassword = ConfigurationManager.AppSettings["ElasticAdminPassword"];
         private static readonly string TemplateIndexName = ConfigurationManager.AppSettings["TemplateIndexName"];
-        private static readonly string SuggestIndexName  = ConfigurationManager.AppSettings["SuggestIndexName"];
+        private static readonly string SuggestIndexName = ConfigurationManager.AppSettings["SuggestIndexName"];
 
         private static DocumentClient _documentClient;
 
@@ -32,7 +34,7 @@ namespace TsElasticSeeder
                 //ensure the database & collection exist before running samples
                 Init();
 
-                Console.WriteLine(String.Format("Seed Suggestions: {0} (Y/N)?",  SuggestIndexName));
+                Console.WriteLine(String.Format("Seed Suggestions: {0} (Y/N)?", SuggestIndexName));
 
                 var seedSuggestions = Console.ReadLine();
 
@@ -200,6 +202,14 @@ namespace TsElasticSeeder
                     Console.Out.WriteLine(d.ToString());
                     TsTemplate model = JsonConvert.DeserializeObject<TsTemplate>(d.ToString());
                     model.SmileyCnt = model.ClonedCnt + model.DownloadCnt;
+
+                    var gradeLevel = model.TmplTags.FirstOrDefault(x => x.ToLower().Contains("grade level(s):"));
+
+                    if (gradeLevel != null)
+                    {
+                        model.TagGradeLevel.AddRange(GetGradeLevelCollection(gradeLevel));
+                    }
+
                     if (!model.Deleted)
                     {
                         // Seed data to elastic
@@ -211,6 +221,72 @@ namespace TsElasticSeeder
 
             // optimize the suggestion index
             elasticConnector.OptimizeTemplateIndex(elasticClient);
+        }
+
+        private static List<int> GetGradeLevelCollection(string gradeLevel)
+        {
+            List<int> gradeLevelCollection = new List<int>();
+
+            string grades = gradeLevel.ToLower().Replace("grade level(s):", "").Trim();
+            string filterOptions = Regex.Replace(grades, " - ", "-");
+            foreach (var filterOption in filterOptions.Split(' '))
+            {
+                gradeLevelCollection.AddRange(GradeStringToArray(filterOption));
+            }
+
+            return gradeLevelCollection;
+        }
+
+        private static List<int> GradeStringToArray(string charGrade)
+        {
+            var noSpaceGrade = Regex.Replace(charGrade, " ", "");
+            switch (noSpaceGrade.ToLower())
+            {
+                case "9-12":
+                    return new List<int> { 9, 10, 11, 12 };
+
+                case "pk-k":
+                    return new List<int> { -1, 0 };
+
+                case "kindergarten":
+                    return new List<int> { 0 };
+
+                case "1st":
+                    return new List<int> { 1 };
+
+                case "1-2":
+                    return new List<int> { 1, 2 };
+
+                case "2nd":
+                    return new List<int> { 2 };
+
+                case "3-5":
+                    return new List<int> { 3, 4, 5 };
+
+                case "6-8":
+                    return new List<int> { 6, 7, 8 };
+
+                case "4th":
+                    return new List<int> { 4 };
+
+                case "5th":
+                    return new List<int> { 5 };
+
+                case "prek":
+                    return new List<int> { -1 };
+
+                case "3rd":
+                    return new List<int> { 3 };
+
+                case "9th-12th":
+                    return new List<int> { 9, 10, 11, 12 };
+
+                case "6th-8th":
+                    return new List<int> { 6, 7, 8 };
+
+                default:
+                    return new List<int>();
+            }
         }
 
     }
