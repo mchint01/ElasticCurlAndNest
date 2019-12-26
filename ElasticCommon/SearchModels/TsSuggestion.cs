@@ -41,6 +41,9 @@ namespace ElasticCommon.SearchModels
 		[Boolean(Name = "isUploaded")]
 		public bool IsUploaded { get; set; }
 
+		[Boolean(Name = "isArticle")]
+		public bool IsArticle { get; set; }
+
 		[Boolean(Name = "isLandscape ")]
 		public bool IsLandscape { get; set; }
 	}
