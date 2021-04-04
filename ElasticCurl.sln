@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticSeeder", "TsElasticSeeder\TsElasticSeeder.csproj", "{EDB53953-AE22-4091-BAAE-2A09D4E94109}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsElasticIndexer", "TsElasticIndexer\TsElasticIndexer.csproj", "{CCA365DC-6DE7-45A3-8133-58FF0F1326E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7557E637-5829-4E0D-ACDE-DEC959759158}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Elastic", "Common.Elastic\Common.Elastic.csproj", "{FC452589-6CF8-4621-B911-064611FD4909}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,11 +43,18 @@ Global
 		{CCA365DC-6DE7-45A3-8133-58FF0F1326E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCA365DC-6DE7-45A3-8133-58FF0F1326E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCA365DC-6DE7-45A3-8133-58FF0F1326E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC452589-6CF8-4621-B911-064611FD4909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC452589-6CF8-4621-B911-064611FD4909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC452589-6CF8-4621-B911-064611FD4909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC452589-6CF8-4621-B911-064611FD4909}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4A54B2A8-13E5-46F3-B500-70F318C1F889} = {7557E637-5829-4E0D-ACDE-DEC959759158}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DAA19148-C845-458E-BFF7-1BC67B0381B1}
 	EndGlobalSection
 EndGlobal

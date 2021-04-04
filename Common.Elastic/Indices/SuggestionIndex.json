@@ -1,0 +1,94 @@
+﻿{
+  "settings": {
+    "index.mapping.coerce": false
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword",
+        "doc_values": false,
+        "index": true,
+        "ignore_above": 50
+      },
+      "value": {
+        "type": "text",
+        "index": true,
+        "norms": true,
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "value_type": {
+        "type": "keyword",
+        "doc_values": false,
+        "index": true,
+        "ignore_above": 256
+      },
+      "image_uri": {
+        "type": "text",
+        "norms": false,
+        "index": false
+      },
+      "afmc_code": {
+        "type": "keyword",
+        "doc_values": true,
+        "index": true,
+        "ignore_above": 50
+      },
+      "tmpl_author": {
+        "type": "text",
+        "index": true,
+        "norms": true,
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        },
+        "tmpl_author_role": {
+          "type": "keyword",
+          "doc_values": true,
+          "index": true,
+          "ignore_above": 50
+        },
+        "tmpl_esc_value": {
+          "type": "text",
+          "index": true,
+          "norms": true,
+          "analyzer": "standard",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          },
+          "tmpl_is_deleted": {
+            "type": "boolean",
+            "doc_values": true,
+            "index": true
+          },
+          "tmpl_is_uploaded": {
+            "type": "boolean",
+            "doc_values": true,
+            "index": true
+          },
+          "tmpl_is_article": {
+            "type": "boolean",
+            "doc_values": true,
+            "index": true
+          },
+          "tmpl_is_landscape": {
+            "type": "boolean",
+            "doc_values": true,
+            "index": true
+          }
+        }
+      }
+    }
+  }
+}

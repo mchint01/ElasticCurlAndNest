@@ -1,0 +1,186 @@
+﻿{
+  "settings": {
+    "index.mapping.coerce": false
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword",
+        "doc_values": false,
+        "index": true,
+        "ignore_above": 100
+      },
+      "title": {
+        "type": "text",
+        "index": true,
+        "norms": true,
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        },
+        "esc_title": {
+          "type": "text",
+          "index": true,
+          "norms": true,
+          "analyzer": "standard",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          },
+          "description": {
+            "type": "text",
+            "index": true,
+            "norms": true,
+            "analyzer": "standard"
+          },
+          "tmpl_uri": {
+            "type": "text",
+            "norms": false,
+            "index": false
+          },
+          "tmpl_author": {
+            "type": "text",
+            "index": true,
+            "norms": true,
+            "analyzer": "standard",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            },
+            "tmpl_author_id": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_author_uri": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_code": {
+              "type": "keyword",
+              "doc_values": false,
+              "index": true,
+              "ignore_above": 25
+            },
+            "tmpl_author_school_district": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_author_afmc_code": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_is_featured": {
+              "type": "boolean",
+              "doc_values": true,
+              "index": true
+            },
+            "tmpl_is_deleted": {
+              "type": "boolean",
+              "doc_values": true,
+              "index": true
+            },
+            "tmpl_is_uploaded": {
+              "type": "boolean",
+              "doc_values": true,
+              "index": true
+            },
+            "tmpl_is_article": {
+              "type": "boolean",
+              "doc_values": true,
+              "index": true
+            },
+            "tmpl_is_landscape": {
+              "type": "boolean",
+              "doc_values": true,
+              "index": true
+            },
+            "tmpl_inspired_tmpl_id": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_inspired_author_name": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_inspired_tmpl_afmc": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_spell_data": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_inspired_author_uri": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_inspired_author_afmc_code": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "modified_by": {
+              "type": "text",
+              "norms": false,
+              "index": false
+            },
+            "tmpl_download_count": {
+              "type": "integer"
+            },
+            "tmpl_cloned_count": {
+              "type": "integer"
+            },
+            "tmpl_smiley_count": {
+              "type": "integer"
+            },
+            "tmpl_tags": {
+              "type": "nested",
+              "properties": {
+                "id": {
+                  "type": "keyword",
+                  "doc_values": false,
+                  "index": true,
+                  "ignore_above": 50
+                },
+                "tag_group_id": {
+                  "type": "keyword",
+                  "doc_values": false,
+                  "index": true,
+                  "ignore_above": 50
+                },
+                "tag_group_name": {
+                  "type": "keyword",
+                  "index": true,
+                  "norms": true,
+                  "ignore_above": 256
+                },
+                "tag_value": {
+                  "type": "keyword",
+                  "index": true,
+                  "norms": true,
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
