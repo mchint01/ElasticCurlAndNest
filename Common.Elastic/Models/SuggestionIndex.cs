@@ -10,6 +10,13 @@ namespace Common.Elastic.Models
         [JsonProperty("value")]
         public string Value { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type of the value.
+        /// values are: Template, Author, Tag, TagGroup
+        /// </summary>
+        /// <value>
+        /// The type of the value.
+        /// </value>
         [JsonProperty("value_type")]
         public string ValueType { get; set; }
 

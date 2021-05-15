@@ -118,7 +118,7 @@
         "norms": false,
         "index": false
       },
-      "tmpl_inspired_tmpl_afmc": {
+      "tmpl_inspired_tmpl_afmc_code": {
         "type": "text",
         "norms": false,
         "index": false
