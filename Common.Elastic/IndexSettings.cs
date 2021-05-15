@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Common.Elastic.Interfaces;
 
 namespace Common.Elastic
@@ -40,22 +36,30 @@ namespace Common.Elastic
 
         public Uri GetSuggestionIndexUri(string documentId)
         {
-            throw new NotImplementedException();
+            var requestUri = GetSuggestionIndexUri();
+
+            return new Uri($"{requestUri}/_doc/{documentId}?refresh=wait_for");
         }
 
         public Uri GetSearchIndexUri(string documentId)
         {
-            throw new NotImplementedException();
+            var requestUri = GetSearchIndexUri();
+
+            return new Uri($"{requestUri}/_doc/{documentId}?refresh=wait_for");
         }
 
         public Uri GetSuggestionIndexForBulkIndexUri()
         {
-            throw new NotImplementedException();
+            var requestUri = GetSuggestionIndexUri();
+
+            return new Uri($"{requestUri}/_bulk?refresh=wait_for");
         }
 
         public Uri GetSearchIndexForBulkIndexUri()
         {
-            throw new NotImplementedException();
+            var requestUri = GetSearchIndexUri();
+
+            return new Uri($"{requestUri}/_bulk?refresh=wait_for");
         }
     }
 }
