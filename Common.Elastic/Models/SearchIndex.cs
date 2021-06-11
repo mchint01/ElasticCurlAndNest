@@ -62,6 +62,9 @@ namespace Common.Elastic.Models
         [JsonProperty("tmpl_spell_data")]
         public string TemplateSpellData { get; set; }
 
+        [JsonProperty("tmpl_author_uri")]
+        public string TemplateAuthorUri { get; set; }
+
         [JsonProperty("tmpl_inspired_author_uri")]
         public string TemplateInspiredAuthorUri { get; set; }
 

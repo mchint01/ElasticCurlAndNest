@@ -26,6 +26,9 @@ namespace Common.Elastic.Models
         [JsonProperty("afmc_code")]
         public string AfmcCode { get; set; }
 
+        [JsonProperty("author_role")]
+        public string AuthorRole { get; set; }
+
         [JsonProperty("tmpl_author")]
         public string TemplateAuthorName { get; set; }
 

@@ -39,6 +39,12 @@
         "index": true,
         "ignore_above": 50
       },
+      "author_role": {
+        "type": "keyword",
+        "doc_values": false,
+        "index": true,
+        "ignore_above": 50
+      },
       "tmpl_author": {
         "type": "text",
         "index": true,
